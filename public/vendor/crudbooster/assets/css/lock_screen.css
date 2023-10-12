@@ -1,0 +1,23 @@
+html {
+    height: 100vh !important;
+}
+
+.lockscreen {
+    height: 70%;
+}
+
+.lockscreen-wrapper {
+    border-radius: 10px;
+    padding-bottom: 30px;
+    color: #666666 !important;
+    background: #ffffff25;
+}
+
+.lockscreen-footer {
+    color: #fd3131;
+}
+
+.lockscreen-item{
+    border-radius: 15px;
+}
+

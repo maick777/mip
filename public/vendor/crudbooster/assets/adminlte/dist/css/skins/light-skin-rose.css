@@ -1,0 +1,523 @@
+/*------------------------------------------------------------
+VARIABLES
+--------------------------------------------------------------*/
+:root {
+    --light-skin-rose-bg-body: linear-gradient(to bottom, #bfc7f8dc, #75135dd8),
+        url("https://www.popsci.com/uploads/2020/06/05/3NIEQB3SFVCMNHH6MHZ42FO6PA.jpg");
+    --light-skin-rose-bg-container: #ffffffaf;
+    --light-skin-rose-bg-header: transparent;
+    --light-skin-rose-bg-sidebar: transparent;
+    --light-skin-rose-bg-footer: transparent;
+    --light-skin-rose-bg-info: #fffaffc0; /*table hover td*/
+    --light-skin-rose-bg-info2: #4a9c96c0; /* cerrar modal / */
+    --light-skin-rose-bg-active: #ffffffc0; /*table th, sidebar, header-footer form */
+    --light-skin-rose-bg-hover: #ffffff38; /*sidebar  li*/
+    --light-skin-rose-bg-blur: radial-gradient(
+        circle at 25%,
+        #bfc7f882,
+        #75135d74 80%
+    );
+    --light-skin-rose-color-info: #d1d1d1; /*tabla linea td / titulo sidebar / border form / border drag */
+    --light-skin-rose-color-info2: #ffffff; /*tabla linea td / titulo sidebar / */
+    --light-skin-rose-color-span: #ffffff;
+    --light-skin-rose-color-active: #326579; /*table th, header form title H1*/
+    --light-skin-rose-color-label: #0a0038; /*Label form / */
+    --light-skin-rose-color-input: #0a0038; /*Input form / */
+}
+
+/*------------------------------------------------------------
+HEADER
+--------------------------------------------------------------*/
+
+.light-skin-rose input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.4);
+}
+
+.light-skin-rose input[type="date"] {
+    color-scheme: dark;
+}
+
+body.light-skin-rose {
+    background: var(--light-skin-rose-bg-body);
+    color: var(--light-skin-rose-color-label);
+}
+
+.light-skin-rose .main-header {
+    background-image: var(--light-skin-rose-bg-blur);
+}
+.light-skin-rose .main-header .navbar {
+    background: var(--light-skin-rose-bg-header);
+}
+
+.light-skin-rose .main-header .navbar .nav > li > a {
+    color: var(--light-skin-rose-color-span);
+}
+.light-skin-rose .main-header .navbar .nav > li > a:hover,
+.light-skin-rose .main-header .navbar .nav > li > a:active,
+.light-skin-rose .main-header .navbar .nav > li > a:focus,
+.light-skin-rose .main-header .navbar .nav .open > a,
+.light-skin-rose .main-header .navbar .nav .open > a:hover,
+.light-skin-rose .main-header .navbar .nav .open > a:focus,
+.light-skin-rose .main-header .navbar .nav > .active > a {
+    background: var(--light-skin-rose-bg-active);
+    color: var(--light-skin-rose-color-active);
+}
+
+.light-skin-rose .main-header .navbar .sidebar-toggle {
+    color: var(--light-skin-rose-color-span);
+}
+
+.light-skin-rose .main-header .navbar .sidebar-toggle:hover {
+    background-color: var(--light-skin-rose-bg-active);
+    color: var(--light-skin-rose-color-active);
+}
+
+@media (max-width: 767px) {
+    .light-skin-rose .main-header .navbar .dropdown-menu li a {
+        color: var(--light-skin-rose-color-active);
+    }
+    .light-skin-rose .main-header .navbar .dropdown-menu li a:hover {
+        background: var(--light-skin-rose-bg-header);
+    }
+}
+.light-skin-rose .main-header .logo {
+    background-color: var(--light-skin-rose-bg-header);
+    color: var(--light-skin-rose-color-span);
+}
+.light-skin-rose .main-header .logo:hover {
+    background-color: var(--light-skin-rose-bg-header);
+}
+.light-skin-rose .main-header li.user-header {
+    background-color: var(--light-skin-rose-bg-header);
+}
+.light-skin-rose
+    .navbar-nav
+    > .user-menu
+    > .dropdown-menu
+    > li.user-header
+    > p {
+    color: var(--light-skin-rose-color-active);
+}
+.light-skin-rose .content-header {
+    color: var(--light-skin-rose-color-active);
+}
+
+/*------------------------------------------------------------
+SIDEBAR MENÚ
+--------------------------------------------------------------*/
+
+.light-skin-rose .wrapper,
+.light-skin-rose .main-sidebar,
+.light-skin-rose .left-side {
+    background: var(--light-skin-rose-bg-sidebar);
+}
+
+.light-skin-rose .user-panel > .info,
+.light-skin-rose .user-panel > .info > a {
+    color: var(--light-skin-rose-color-span);
+}
+
+.light-skin-rose .sidebar-menu > li.header {
+    color: var(--light-skin-rose-color-span);
+    background: var(--light-skin-rose-bg-sidebar);
+}
+
+.light-skin-rose .sidebar-menu > li:hover > a {
+    background-color: var(--light-skin-rose-bg-hover);
+}
+.light-skin-rose .sidebar-menu > li.active > a {
+    color: var(--light-skin-rose-color-active);
+    background: var(--light-skin-rose-bg-active);
+}
+.light-skin-rose .sidebar-menu > li.active {
+    border-left: 1px solid var(--light-skin-rose-color-active);
+}
+
+.light-skin-rose .sidebar-menu > li > .treeview-menu {
+    background: var(--light-skin-rose-bg-sidebar);
+}
+.light-skin-rose .sidebar a {
+    color: var(--light-skin-rose-color-span);
+}
+
+.light-skin-rose .treeview-menu > li > a {
+    color: var(--light-skin-rose-color-span);
+}
+
+.light-skin-rose .treeview-menu > li.active > a,
+.light-skin-rose .treeview-menu > li > a:hover {
+    background: var(--light-skin-rose-bg-hover);
+}
+
+@media (min-width: 768px) {
+    .light-skin-rose.sidebar-mini.sidebar-collapse
+        .sidebar-menu
+        > li
+        > .treeview-menu {
+        border-left: 1px solid var(--light-skin-rose-color-info);
+    }
+}
+
+/*------------------------------------------------------------
+SUBMENÚ
+--------------------------------------------------------------*/
+
+/*------------------------------------------------------------
+CONTENIDO
+--------------------------------------------------------------*/
+.light-skin-rose .content-wrapper {
+    background: var(--light-skin-rose-bg-container);
+}
+
+.light-skin-rose .box {
+    background: var(--light-skin-rose-bg-container);
+}
+
+.light-skin-rose
+    .navbar-nav
+    > .notifications-menu
+    > .dropdown-menu
+    > li.header,
+.light-skin-rose
+    .navbar-nav
+    > .notifications-menu
+    > .dropdown-menu
+    > li.footer,
+.light-skin-rose
+    .navbar-nav
+    > .notifications-menu
+    > .dropdown-menu
+    > li.footer
+    a {
+    background-color: var(--light-skin-rose-bg-container);
+    color: var(--light-skin-rose-color-label);
+    border-color: var(--light-skin-rose-color-info);
+}
+
+.light-skin-rose .dropdown-menu {
+    background: var(--light-skin-rose-bg-container)!important;
+    border-color: var(--light-skin-rose-color-info)!important;
+    color: var(--light-skin-rose-color-active);
+}
+.light-skin-rose .dropdown-menu li a {
+    background: var(--light-skin-rose-color-info);
+    border-color: var(--light-skin-rose-color-info);
+    color: var(--light-skin-rose-color-label);
+}
+
+.light-skin-rose .dropdown-menu li a:hover {
+    color: var(--light-skin-rose-color-active);
+    background: var(--light-skin-rose-color-info);
+}
+
+.light-skin-rose .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+    background-color: var(--light-skin-rose-bg-active);
+}
+
+.light-skin-rose
+    .navbar-nav
+    > .user-menu
+    > .dropdown-menu
+    > .user-footer
+    .btn-default {
+    color: var(--light-skin-rose-color-label);
+}
+
+.light-skin-rose
+    .navbar-nav
+    > .user-menu
+    > .dropdown-menu
+    > .user-footer
+    .btn-default:hover {
+    color: var(--light-skin-rose-color-active);
+}
+
+.light-skin-rose .box-header.with-border {
+    border-color: var(--light-skin-rose-color-info);
+}
+
+.light-skin-rose .modal-content {
+    background: var(--light-skin-rose-bg-container);
+    border: 1px solid var(--light-skin-rose-color-info);
+    box-shadow: 0 0 15px var(--light-skin-rose-bg-body);
+    color: var(--light-skin-rose-color-label);
+}
+
+.light-skin-rose .modal-content .modal-footer,
+.light-skin-rose .modal-content .modal-header {
+    color: var(--light-skin-rose-color-active);
+    border-color: var(--light-skin-rose-color-info);
+    background: var(--light-skin-rose-bg-active);
+}
+.light-skin-rose .modal-content .modal-header button {
+    background: var(--light-skin-rose-bg-active);
+}
+
+.light-skin-rose .modal-content .modal-body {
+    background: var(--light-skin-rose-bg-container);
+}
+
+.light-skin-rose .list-container {
+    backdrop-filter: blur(15px) saturate(86%);
+    background: var(--light-skin-rose-bg-container);
+    border: 1px solid var(--light-skin-rose-color-info);
+}
+
+.light-skin-rose .list-container .title {
+    text-align: center;
+}
+
+.light-skin-rose .list-group-item {
+    background: var(--light-skin-rose-bg-container);
+    border-color: var(--light-skin-rose-color-info);
+    color: var(--light-skin-rose-color-input);
+}
+
+.light-skin-rose .list-group-item .badge {
+    background: var(--light-skin-rose-color-info);
+    color: var(--light-skin-rose-color-input);
+}
+
+.light-skin-rose .list-group .sub-title {
+    color: var(--light-skin-rose-color-label);
+}
+
+.light-skin-rose .hero h1 {
+    text-shadow: 1px 1px 0 var(--light-skin-rose-color-label);
+}
+.light-skin-rose .hero h3 {
+    color: var(--light-skin-rose-color-input);
+}
+
+/*------------------------------------------------------------
+FORMULARIO
+--------------------------------------------------------------*/
+
+.light-skin-rose .content-header > .breadcrumb {
+    background: var(--light-skin-rose-bg-container);
+}
+
+.light-skin-rose .panel {
+    background: var(--light-skin-rose-bg-container);
+}
+
+.light-skin-rose .panel-default {
+    border-color: var(--light-skin-rose-color-info);
+}
+
+.light-skin-rose .panel-primary,
+.light-skin-rose .panel-success,
+.light-skin-rose .panel-danger {
+    border-color: var(--light-skin-rose-color-info);
+}
+.light-skin-rose .panel .panel-heading,
+.light-skin-rose .box-footer {
+    background: var(--light-skin-rose-bg-active);
+    border-color: var(--light-skin-rose-color-info);
+    color: var(--light-skin-rose-color-active);
+}
+
+.light-skin-rose .form-divider {
+    border-bottom-color: var(--light-skin-rose-color-info) !important;
+}
+
+.light-skin-rose .form-group label {
+    color: var(--light-skin-rose-color-label);
+}
+.light-skin-rose .form-control {
+    background: var(--light-skin-rose-bg-container);
+    border-color: var(--light-skin-rose-color-info);
+    color: var(--light-skin-rose-color-input);
+}
+
+.light-skin-rose input:-webkit-autofill,
+.light-skin-rose input:-webkit-autofill:hover,
+.light-skin-rose input:-webkit-autofill:focus,
+.light-skin-rose textarea:-webkit-autofill,
+.light-skin-rose textarea:-webkit-autofill:hover,
+.light-skin-rose textarea:-webkit-autofill:focus,
+.light-skin-rose select:-webkit-autofill,
+.light-skin-rose select:-webkit-autofill:hover,
+.light-skin-rose select:-webkit-autofill:focus {
+    border: 1px solid var(--light-skin-rose-color-info);
+    -webkit-text-fill-color: var(--light-skin-rose-color-label);
+    -webkit-box-shadow: 0 0 0px 1000px var(--light-skin-rose-bg-container)
+        inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.light-skin-rose .input-group .input-group-addon {
+    background-color: var(--light-skin-rose-bg-container);
+    border-color: var(--light-skin-rose-color-info);
+}
+
+/*Select múltiple*/
+
+.light-skin-rose .select2-container--default .select2-selection--multiple {
+    border: 1px solid var(--light-skin-rose-color-info) !important;
+    background-color: var(--light-skin-rose-bg-container) !important;
+}
+
+/*dragable*/
+.light-skin-rose .draggable-menu li div {
+    background-color: var(--light-skin-rose-bg-info) !important;
+    border: 1px dashed var(--light-skin-rose-color-info) !important;
+    color: var(--light-skin-rose-color-label) !important;
+}
+
+/*Select 2*/
+
+.light-skin-rose .select2-container--default .select2-selection--single {
+    background-color: var(--light-skin-rose-bg-container) !important;
+    border-color: var(--light-skin-rose-color-info) !important;
+}
+
+.light-skin-rose
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__rendered {
+    color: var(--light-skin-rose-color-label) !important;
+}
+
+.light-skin-rose
+    .select2-container--default
+    .select2-results__option[aria-selected="true"] {
+    background: var(--light-skin-rose-color-info) !important;
+    color: var(--light-skin-rose-color-active) !important;
+}
+
+.light-skin-rose .select2-dropdown {
+    background-color: var(--light-skin-rose-bg-container) !important;
+    color: var(--light-skin-rose-color-label);
+    border: 1px solid var(--light-skin-rose-color-info) !important;
+    box-shadow: 0 0 15px var(--light-skin-rose-bg-body);
+}
+
+.light-skin-rose .select2-dropdown input {
+    background: var(--light-skin-rose-bg-info);
+    border-color: var(--light-skin-rose-color-info) !important;
+    color: var(--light-skin-rose-color-label);
+}
+
+/*Tabs*/
+.light-skin-rose .nav-tabs > li.active > a {
+    background: var(--light-skin-rose-bg-container);
+    border-top: 1px solid var(--light-skin-rose-color-label) !important;
+    border-left: 1px solid var(--light-skin-rose-color-label) !important;
+    border-right: 1px solid var(--light-skin-rose-color-label) !important;
+    color: var(--light-skin-rose-color-label);
+}
+
+.light-skin-rose .nav > li > a:hover,
+.light-skin-rose .nav > li > a:active,
+.light-skin-rose .nav > li > a:focus,
+.light-skin-rose .nav-tabs > li.active > a:hover,
+.light-skin-rose .nav-tabs > li > a:hover {
+    background: var(--light-skin-rose-bg-container);
+    color: var(--light-skin-rose-color-label);
+}
+.light-skin-rose .nav-tabs > li.active > a:hover,
+.light-skin-rose .nav-tabs > li > a:hover {
+    color: var(--light-skin-rose-color-active);
+}
+
+/*------------------------------------------------------------
+TABLE
+--------------------------------------------------------------*/
+
+.light-skin-rose .table-hover > tbody > tr:hover > .warning,
+.light-skin-rose .table-hover > tbody > tr:hover > .danger,
+.light-skin-rose .table-hover > tbody > tr:hover > .active,
+.light-skin-rose .table-hover > tbody > tr:hover > .success,
+.light-skin-rose .table-hover > tbody > tr:hover > .info {
+    background: var(--light-skin-rose-bg-info);
+}
+
+.light-skin-rose .table-hover > tbody > tr > td.warning:hover,
+.light-skin-rose .table-hover > tbody > tr > td.danger:hover,
+.light-skin-rose .table-hover > tbody > tr > td.active:hover,
+.light-skin-rose .table-hover > tbody > tr > td.success:hover,
+.light-skin-rose .table-hover > tbody > tr > td.info:hover {
+    background: var(--light-skin-rose-bg-active);
+}
+
+.light-skin-rose .box .table th,
+.light-skin-rose .box .table td {
+    border-color: transparent;
+    color: var(--light-skin-rose-color-input);
+}
+
+.light-skin-rose .light-skin-rose .table > tbody > tr > td.warning,
+.light-skin-rose .table > tbody > tr > td.danger,
+.light-skin-rose .table > tbody > tr > td.active,
+.light-skin-rose .table > tbody > tr > td.success,
+.light-skin-rose .table > tbody > tr > td.info,
+.light-skin-rose .table > tbody > tr > td {
+    border-color: var(--light-skin-rose-bg-info) !important;
+    color: var(--light-skin-rose-color-label);
+}
+
+.light-skin-rose .table > tbody > tr.active > td {
+    background-color: var(--dark-skin-navi-bg-active);
+}
+
+
+.light-skin-rose .table > thead > tr.active > th {
+    background-color: var(--light-skin-rose-bg-active);
+}
+
+.light-skin-rose .table > thead > tr.active > th a {
+    color: var(--light-skin-rose-color-active);
+}
+
+.light-skin-rose .table-hover > tbody > tr:hover {
+    background: var(--light-skin-rose-bg-info) !important;
+}
+
+.light-skin-rose #table_dashboard.table-bordered,
+.light-skin-rose #table_dashboard.table-bordered thead tr th,
+.light-skin-rose #table_dashboard.table-bordered tbody tr td {
+    border-bottom: 1px solid var(--light-skin-rose-color-info2);
+}
+
+/*------------------------------------------------------------
+FOOTER
+--------------------------------------------------------------*/
+
+.light-skin-rose .main-footer {
+    border-left: 1px solid var(--light-skin-rose-color-info);
+    background: var(--light-skin-rose-bg-footer);
+    color: var(--light-skin-rose-color-span);
+}
+
+/*------------------------------------------------------------
+TABLE FOOTER
+--------------------------------------------------------------*/
+
+.light-skin-rose .pagination > li > a,
+.light-skin-rose .pagination > li > span {
+    background-color: var(--light-skin-rose-bg-body);
+    color: var(--light-skin-rose-color-active);
+}
+
+.light-skin-rose .pagination > .disabled > a,
+.light-skin-rose .pagination > .disabled > a:focus,
+.light-skin-rose .pagination > .disabled > a:hover,
+.light-skin-rose .pagination > .disabled > span,
+.light-skin-rose .pagination > .disabled > span:focus,
+.light-skin-rose .pagination > .disabled > span:hover {
+    background-color: var(--light-skin-rose-bg-body);
+}
+
+.light-skin-rose .pagination > .active > span:hover,
+.light-skin-rose .pagination > .active > span {
+    background-color: var(--light-skin-rose-bg-active);
+    color: var(--light-skin-rose-color-active);
+}
+.light-skin-rose .pagination > li > a:focus,
+.light-skin-rose .pagination > li > a:hover,
+.light-skin-rose .pagination > li > span:focus,
+.light-skin-rose .pagination > li > span:hover {
+    background-color: transparent;
+    color: var(--light-skin-rose-color-active);
+}

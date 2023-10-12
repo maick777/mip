@@ -1,0 +1,512 @@
+/*------------------------------------------------------------
+VARIABLES
+--------------------------------------------------------------*/
+:root {
+    --light-skin-primary-bg-body: linear-gradient(
+            to bottom,
+            #361c7986,
+            #472fd18f,
+            #361c79a5
+        ),
+        url("../../../../../wallpaper.jpg");
+    --light-skin-primary-bg-container: #f4eeffe3;
+    --light-skin-primary-bg-header: transparent;
+    --light-skin-primary-bg-sidebar: transparent;
+    --light-skin-primary-bg-footer: transparent;
+    --light-skin-primary-bg-info: #f7f3ffc6; /*table hover td*/
+    --light-skin-primary-bg-info2: #4a9c96c0; /* cerrar modal / */
+    --light-skin-primary-bg-active: #f5f3ffd5; /*table th, sidebar active, header-footer form */
+    --light-skin-primary-bg-hover: #f5f3ff36; /*sidebar  li*/
+    --light-skin-primary-bg-blur: radial-gradient(
+        circle at 25%,
+        hsla(265, 100%, 63%, 0.389),
+        rgba(53, 31, 116, 0.593) 80%
+    );
+
+    --light-skin-primary-color-info: #cdcde6; /*border input, / border form*/
+    --light-skin-primary-color-info2: #dedede; /*tabla linea td / titulo sidebar / */
+    --light-skin-primary-color-span: #ffffff;
+    --light-skin-primary-color-active: #150f51; /*table th, header form title H1*/
+
+    --light-skin-primary-color-label: #150f51; /*Label form / */
+    --light-skin-primary-color-input: #150f51; /*Input form / */
+}
+
+/*------------------------------------------------------------
+HEADER
+--------------------------------------------------------------*/
+
+.light-skin-primary input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.4);
+}
+
+.light-skin-primary input[type="date"] {
+    color-scheme: light;
+}
+
+body.light-skin-primary {
+    background: var(--light-skin-primary-bg-body);
+    color: var(--light-skin-primary-color-label);
+}
+
+.light-skin-primary .main-header {
+    background-image: var(--light-skin-primary-bg-blur);
+}
+.light-skin-primary .main-header .navbar {
+    background: var(--light-skin-primary-bg-header);
+}
+
+.light-skin-primary .main-header .navbar .nav > li > a {
+    color: var(--light-skin-primary-color-span);
+}
+.light-skin-primary .main-header .navbar .nav > li > a:hover,
+.light-skin-primary .main-header .navbar .nav > li > a:active,
+.light-skin-primary .main-header .navbar .nav > li > a:focus,
+.light-skin-primary .main-header .navbar .nav .open > a,
+.light-skin-primary .main-header .navbar .nav .open > a:hover,
+.light-skin-primary .main-header .navbar .nav .open > a:focus,
+.light-skin-primary .main-header .navbar .nav > .active > a {
+    background: var(--light-skin-primary-bg-active);
+    color: var(--light-skin-primary-color-active);
+}
+
+.light-skin-primary .main-header .navbar .sidebar-toggle {
+    color: var(--light-skin-primary-color-span);
+}
+
+.light-skin-primary .main-header .navbar .sidebar-toggle:hover {
+    background-color: var(--light-skin-primary-bg-active);
+    color: var(--light-skin-primary-color-active);
+}
+
+@media (max-width: 767px) {
+    .light-skin-primary .main-header .navbar .dropdown-menu li a {
+        color: var(--light-skin-primary-color-active);
+    }
+    .light-skin-primary .main-header .navbar .dropdown-menu li a:hover {
+        background: var(--light-skin-primary-bg-header);
+    }
+}
+.light-skin-primary .main-header .logo {
+    background-color: var(--light-skin-primary-bg-header);
+    color: var(--light-skin-primary-color-span);
+}
+.light-skin-primary .main-header .logo:hover {
+    background-color: var(--light-skin-primary-bg-header);
+}
+.light-skin-primary .main-header li.user-header {
+    background-color: var(--light-skin-primary-bg-header);
+}
+.light-skin-primary .navbar-nav > .user-menu > .dropdown-menu > li.user-header > p {
+    color: var(--light-skin-primary-color-active);
+}
+.light-skin-primary .content-header {
+    color: var(--light-skin-primary-color-active);
+}
+
+/*------------------------------------------------------------
+SIDEBAR MENÚ
+--------------------------------------------------------------*/
+
+.light-skin-primary .wrapper,
+.light-skin-primary .main-sidebar,
+.light-skin-primary .left-side {
+    background: var(--light-skin-primary-bg-sidebar);
+}
+
+.light-skin-primary .user-panel > .info,
+.light-skin-primary .user-panel > .info > a {
+    color: var(--light-skin-primary-color-span);
+}
+
+.light-skin-primary .sidebar-menu > li.header {
+    color: var(--light-skin-primary-color-span);
+    background: var(--light-skin-primary-bg-sidebar);
+}
+
+.light-skin-primary .sidebar-menu > li:hover > a {
+    background-color: var(--light-skin-primary-bg-hover);
+}
+.light-skin-primary .sidebar-menu > li.active > a {
+    color: var(--light-skin-primary-color-active);
+    background: var(--light-skin-primary-bg-active);
+}
+.light-skin-primary .sidebar-menu > li.active {
+    border-left: 1px solid var(--light-skin-primary-color-active);
+}
+
+.light-skin-primary .sidebar-menu > li > .treeview-menu {
+    background: var(--light-skin-primary-bg-sidebar);
+}
+.light-skin-primary .sidebar a {
+    color: var(--light-skin-primary-color-span);
+}
+
+.light-skin-primary .treeview-menu > li > a {
+    color: var(--light-skin-primary-color-span);
+}
+
+.light-skin-primary .treeview-menu > li.active > a,
+.light-skin-primary .treeview-menu > li > a:hover {
+    background: var(--light-skin-primary-bg-hover);
+}
+
+@media (min-width: 768px) {
+    .light-skin-primary.sidebar-mini.sidebar-collapse
+        .sidebar-menu
+        > li
+        > .treeview-menu {
+        border-left: 1px solid var(--light-skin-primary-color-info);
+    }
+}
+
+/*------------------------------------------------------------
+SUBMENÚ
+--------------------------------------------------------------*/
+
+/*------------------------------------------------------------
+CONTENIDO
+--------------------------------------------------------------*/
+.light-skin-primary .content-wrapper {
+    background: var(--light-skin-primary-bg-container);
+}
+
+.light-skin-primary .box {
+    background: var(--light-skin-primary-bg-container);
+}
+
+.light-skin-primary .navbar-nav > .notifications-menu > .dropdown-menu > li.header,
+.light-skin-primary .navbar-nav > .notifications-menu > .dropdown-menu > li.footer,
+.light-skin-primary .navbar-nav > .notifications-menu > .dropdown-menu > li.footer a {
+    background-color: var(--light-skin-primary-bg-container);
+    color: var(--light-skin-primary-color-label);
+    border-color: var(--light-skin-primary-color-info);
+}
+
+.light-skin-primary .dropdown-menu {
+    background: var(--light-skin-primary-bg-container);
+    border-color: var(--light-skin-primary-color-info);
+    color: var(--light-skin-primary-color-active);
+}
+.light-skin-primary .dropdown-menu li a {
+    background: var(--light-skin-primary-color-info);
+    border-color: var(--light-skin-primary-color-info);
+    color: var(--light-skin-primary-color-label);
+}
+
+.light-skin-primary .dropdown-menu li a:hover {
+    color: var(--light-skin-primary-color-active);
+    background: var(--light-skin-primary-color-info);
+}
+
+.light-skin-primary .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+    background-color: var(--light-skin-primary-bg-active);
+}
+
+.light-skin-primary
+    .navbar-nav
+    > .user-menu
+    > .dropdown-menu
+    > .user-footer
+    .btn-default {
+    color: var(--light-skin-primary-color-label);
+}
+
+.light-skin-primary
+    .navbar-nav
+    > .user-menu
+    > .dropdown-menu
+    > .user-footer
+    .btn-default:hover {
+    color: var(--light-skin-primary-color-active);
+}
+
+.light-skin-primary .box-header.with-border {
+    border-color: var(--light-skin-primary-color-info);
+}
+
+.light-skin-primary .modal-content {
+    background: var(--light-skin-primary-bg-container);
+    border: 1px solid var(--light-skin-primary-color-info);
+    box-shadow: 0 0 15px var(--light-skin-primary-bg-body);
+    color: var(--light-skin-primary-color-label);
+}
+
+.light-skin-primary .modal-content .modal-footer,
+.light-skin-primary .modal-content .modal-header {
+    color: var(--light-skin-primary-color-active);
+    border-color: var(--light-skin-primary-color-info);
+    background: var(--light-skin-primary-bg-active);
+}
+.light-skin-primary .modal-content .modal-header button {
+    background: var(--light-skin-primary-bg-active);
+}
+
+.light-skin-primary .modal-content .modal-body {
+    background: var(--light-skin-primary-bg-container);
+}
+
+.light-skin-primary .list-container {
+    backdrop-filter: blur(15px) saturate(86%);
+    background: var(--light-skin-primary-bg-container);
+    border: 1px solid var(--light-skin-primary-color-info);
+
+}
+
+.light-skin-primary .list-container .title {
+    text-align: center;
+}
+
+.light-skin-primary .list-group-item {
+    background: var(--light-skin-primary-bg-container);
+    border-color: var(--light-skin-primary-color-info);
+    color: var(--light-skin-primary-color-input);
+}
+
+.light-skin-primary .list-group-item .badge {
+    background: var(--light-skin-primary-color-info);
+    color: var(--light-skin-primary-color-input);
+}
+
+.light-skin-primary .list-group .sub-title {
+    color: var(--light-skin-primary-color-label);
+}
+
+.light-skin-primary .hero h1{
+    text-shadow: 1px 1px 0 var(--light-skin-primary-color-label);
+
+}
+.light-skin-primary .hero h3 {
+    color: var(--light-skin-primary-color-input);
+}
+
+/*------------------------------------------------------------
+FORMULARIO
+--------------------------------------------------------------*/
+
+.light-skin-primary .content-header > .breadcrumb {
+    background: var(--light-skin-primary-bg-container);
+}
+
+.light-skin-primary .panel {
+    background: var(--light-skin-primary-bg-container);
+}
+
+.light-skin-primary .panel-default {
+    border-color: var(--light-skin-primary-color-info);
+}
+
+.light-skin-primary .panel-primary,
+.light-skin-primary .panel-success,
+.light-skin-primary .panel-danger {
+    border-color: var(--light-skin-primary-color-info);
+}
+.light-skin-primary .panel .panel-heading,
+.light-skin-primary .box-footer {
+    background: var(--light-skin-primary-bg-active);
+    border-color: var(--light-skin-primary-color-info);
+    color: var(--light-skin-primary-color-active);
+}
+
+.light-skin-primary .form-divider {
+    border-bottom-color: var(--light-skin-primary-color-info) !important;
+}
+
+.light-skin-primary .form-group label {
+    color: var(--light-skin-primary-color-label);
+}
+.light-skin-primary .form-control {
+    background: var(--light-skin-primary-bg-container);
+    border-color: var(--light-skin-primary-color-info);
+    color: var(--light-skin-primary-color-input);
+}
+
+.light-skin-primary input:-webkit-autofill,
+.light-skin-primary input:-webkit-autofill:hover,
+.light-skin-primary input:-webkit-autofill:focus,
+.light-skin-primary textarea:-webkit-autofill,
+.light-skin-primary textarea:-webkit-autofill:hover,
+.light-skin-primary textarea:-webkit-autofill:focus,
+.light-skin-primary select:-webkit-autofill,
+.light-skin-primary select:-webkit-autofill:hover,
+.light-skin-primary select:-webkit-autofill:focus {
+    border: 1px solid var(--light-skin-primary-color-info);
+    -webkit-text-fill-color: var(--light-skin-primary-color-label);
+    -webkit-box-shadow: 0 0 0px 1000px var(--light-skin-primary-bg-container) inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.light-skin-primary .input-group .input-group-addon {
+    background-color: var(--light-skin-primary-bg-container);
+    border-color: var(--light-skin-primary-color-info);
+}
+
+/*Select múltiple*/
+
+.light-skin-primary .select2-container--default .select2-selection--multiple {
+    border: 1px solid var(--light-skin-primary-color-info) !important;
+    background-color: var(--light-skin-primary-bg-container) !important;
+}
+
+/*dragable*/
+.light-skin-primary .draggable-menu li div {
+    background-color: var(--light-skin-primary-bg-info) !important;
+    border: 1px dashed var(--light-skin-primary-color-info) !important;
+    color: var(--light-skin-primary-color-label) !important;
+}
+
+/*Select 2*/
+
+.light-skin-primary .select2-container--default .select2-selection--single {
+    background-color: var(--light-skin-primary-bg-container) !important;
+    border-color: var(--light-skin-primary-color-info) !important;
+}
+
+.light-skin-primary
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__rendered {
+    color: var(--light-skin-primary-color-label) !important;
+}
+
+.light-skin-primary
+    .select2-container--default
+    .select2-results__option[aria-selected="true"] {
+    background: var(--light-skin-primary-color-info) !important;
+    color: var(--light-skin-primary-color-active) !important;
+}
+
+.light-skin-primary .select2-dropdown {
+    background-color: var(--light-skin-primary-bg-container) !important;
+    color: var(--light-skin-primary-color-label);
+    border: 1px solid var(--light-skin-primary-color-info) !important;
+    box-shadow: 0 0 15px var(--light-skin-primary-bg-body);
+}
+
+.light-skin-primary .select2-dropdown input {
+    background: var(--light-skin-primary-bg-info);
+    border-color: var(--light-skin-primary-color-info) !important;
+    color: var(--light-skin-primary-color-label);
+}
+
+/*Tabs*/
+.light-skin-primary .nav-tabs > li.active > a {
+    background: var(--light-skin-primary-bg-container);
+    border-top: 1px solid var(--light-skin-primary-color-label) !important;
+    border-left: 1px solid var(--light-skin-primary-color-label) !important;
+    border-right: 1px solid var(--light-skin-primary-color-label) !important;
+    color: var(--light-skin-primary-color-label);
+}
+
+.light-skin-primary .nav > li > a:hover,
+.light-skin-primary .nav > li > a:active,
+.light-skin-primary .nav > li > a:focus,
+.light-skin-primary .nav-tabs > li.active > a:hover,
+.light-skin-primary .nav-tabs > li > a:hover {
+    background: var(--light-skin-primary-bg-container);
+    color: var(--light-skin-primary-color-label);
+}
+.light-skin-primary .nav-tabs > li.active > a:hover,
+.light-skin-primary .nav-tabs > li > a:hover {
+    color: var(--light-skin-primary-color-active);
+}
+
+/*------------------------------------------------------------
+TABLE
+--------------------------------------------------------------*/
+
+.light-skin-primary .table-hover > tbody > tr:hover > .warning,
+.light-skin-primary .table-hover > tbody > tr:hover > .danger,
+.light-skin-primary .table-hover > tbody > tr:hover > .active,
+.light-skin-primary .table-hover > tbody > tr:hover > .success,
+.light-skin-primary .table-hover > tbody > tr:hover > .info {
+    background: var(--light-skin-primary-bg-info);
+}
+
+.light-skin-primary .table-hover > tbody > tr > td.warning:hover,
+.light-skin-primary .table-hover > tbody > tr > td.danger:hover,
+.light-skin-primary .table-hover > tbody > tr > td.active:hover,
+.light-skin-primary .table-hover > tbody > tr > td.success:hover,
+.light-skin-primary .table-hover > tbody > tr > td.info:hover {
+    background: var(--light-skin-primary-bg-active);
+}
+
+.light-skin-primary .box .table th,
+.light-skin-primary .box .table td {
+    border-color: transparent;
+    color: var(--light-skin-primary-color-input);
+}
+
+.light-skin-primary .light-skin-primary .table > tbody > tr > td.warning,
+.light-skin-primary .table > tbody > tr > td.danger,
+.light-skin-primary .table > tbody > tr > td.active,
+.light-skin-primary .table > tbody > tr > td.success,
+.light-skin-primary .table > tbody > tr > td.info,
+.light-skin-primary .table > tbody > tr > td {
+    border-color: var(--light-skin-primary-bg-info) !important;
+    color: var(--light-skin-primary-color-label);
+}
+
+.light-skin-primary .table > tbody > tr.active > td {
+    background-color: var(--dark-skin-navi-bg-active);
+}
+
+.light-skin-primary .table > thead > tr.active > th {
+    background-color: var(--light-skin-primary-bg-active);
+}
+
+.light-skin-primary .table > thead > tr.active > th a {
+    color: var(--light-skin-primary-color-active);
+}
+
+.light-skin-primary .table-hover > tbody > tr:hover {
+    background: var(--light-skin-primary-bg-info) !important;
+}
+
+.light-skin-primary #table_dashboard.table-bordered,
+.light-skin-primary #table_dashboard.table-bordered thead tr th,
+.light-skin-primary #table_dashboard.table-bordered tbody tr td {
+    border-bottom: 1px solid var(--light-skin-primary-color-info2);
+}
+
+/*------------------------------------------------------------
+FOOTER
+--------------------------------------------------------------*/
+
+.light-skin-primary .main-footer {
+    border-left: 1px solid var(--light-skin-primary-color-info);
+    background: var(--light-skin-primary-bg-footer);
+    color: var(--light-skin-primary-color-span);
+}
+
+/*------------------------------------------------------------
+TABLE FOOTER
+--------------------------------------------------------------*/
+
+.light-skin-primary .pagination > li > a,
+.light-skin-primary .pagination > li > span {
+    background-color: var(--light-skin-primary-bg-body);
+    color: var(--light-skin-primary-color-active);
+}
+
+.light-skin-primary .pagination > .disabled > a,
+.light-skin-primary .pagination > .disabled > a:focus,
+.light-skin-primary .pagination > .disabled > a:hover,
+.light-skin-primary .pagination > .disabled > span,
+.light-skin-primary .pagination > .disabled > span:focus,
+.light-skin-primary .pagination > .disabled > span:hover {
+    background-color: var(--light-skin-primary-bg-body);
+}
+
+.light-skin-primary .pagination > .active > span:hover,
+.light-skin-primary .pagination > .active > span {
+    background-color: var(--light-skin-primary-bg-active);
+    color: var(--light-skin-primary-color-active);
+}
+.light-skin-primary .pagination > li > a:focus,
+.light-skin-primary .pagination > li > a:hover,
+.light-skin-primary .pagination > li > span:focus,
+.light-skin-primary .pagination > li > span:hover {
+    background-color: transparent;
+    color: var(--light-skin-primary-color-active);
+}
