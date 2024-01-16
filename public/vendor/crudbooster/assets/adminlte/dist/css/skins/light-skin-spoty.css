@@ -209,8 +209,8 @@ CONTENIDO
 }
 
 .light-skin-spoty .dropdown-menu {
-    background: var(--light-skin-spoty-bg-container)!important;
-    border-color: var(--light-skin-spoty-color-info)!important;
+    background: var(--light-skin-spoty-bg-container) !important;
+    border-color: var(--light-skin-spoty-color-info) !important;
     color: var(--light-skin-spoty-color-active);
 }
 .light-skin-spoty .dropdown-menu li a {
@@ -301,6 +301,10 @@ CONTENIDO
 }
 .light-skin-spoty .hero h3 {
     color: var(--light-skin-spoty-color-input);
+}
+.light-skin-spoty .btn-secondary,
+.light-skin-spoty .btn-secondary:hover {
+    color: var(--light-skin-spoty-color-active);
 }
 
 /*------------------------------------------------------------
@@ -578,4 +582,23 @@ TABLE FOOTER
 .light-skin-spoty .pagination > li > span:hover {
     background-color: transparent;
     color: var(--light-skin-spoty-color-active);
+}
+
+.light-skin-spoty .loading {
+    background-color: var(--light-skin-spoty-bg-background);
+    cursor: not-allowed;
+    color: var(--light-skin-spoty-color-active);
+}
+
+.light-skin-spoty .loading .loading-form {
+    background-color: var(--light-skin-spoty-bg-active);
+    cursor: not-allowed;
+}
+
+/*------------------------------------------------------------
+SWEET ALERT
+--------------------------------------------------------------*/
+
+.light-skin-spoty .sweet-alert {
+    background-color: var(--light-skin-spoty-bg-container) !important;
 }

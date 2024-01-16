@@ -17,7 +17,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->table               = 'cms_users';
 		$this->primary_key         = 'id';
 		$this->title_field         = "name";
-		$this->button_action_style = 'button_icon';
+		$this->button_action_style = 'dropdown'; //button_text button_icon_text dropdown 
 		$this->button_bulk_action  = false;
 		$this->button_import 	   = false;
 		$this->button_export 	   = false;
@@ -31,14 +31,14 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->col[] = ["label" => "Foto", "name" => "photo", "width" => "55", "image" => 1];
 		if (CRUDBooster::isUpdate() && $this->button_edit) {
 			$this->col[] = ["label" => "", "name" => "id", "width" => "20", "callback" => function ($row) {
-				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
+				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_edit_data") . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
 			}];
 		}
 		$this->col[] = ["label" => "Apellidos & Nombres", "name" => "nombre_completo", "callback" => function ($row) {
-			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" class="table-link">' . $row->nombre_completo . '</a>' :  $row->nombre_completo;
+			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_detail_data") . '"  class="table-link">' . $row->nombre_completo . '</a>' :  $row->nombre_completo;
 		}];
 		$this->col[] = ["label" => "Correo", "name" => "email", "callback" => function ($row) {
-			return ($row->email) ? "<a href=\"mailto:$row->email\" class='table-link'><i class=\"fa fa-envelope-o text-success\"></i>&nbsp;&nbsp;$row->email</a>" : "&nbsp;";
+			return ($row->email) ? "<a href=\"mailto:$row->email\" data-toggle='tooltip' title='Enviar email'  class='table-link'><i class=\"fa fa-envelope-o text-success\"></i>&nbsp;&nbsp;$row->email</a>" : "&nbsp;";
 		}];
 		$this->col[] = ["label" => "Privilegio", "name" => "id_cms_privileges", "join" => "cms_privileges,name"];
 		$this->col[] = [
@@ -65,21 +65,19 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->form[] = ["label" => "Foto", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'file|max:1000', 'resize_width' => 500, 'resize_height' => 500];
 		$this->form[] = ["label" => "Privilegio", "name" => "id_cms_privileges", "type" => "select", "datatable" => "cms_privileges,name,name", 'datatable_where' => 'id != ' . 1, 'required' => true, 'width' => 'col-sm-6'];
 		if (CRUDBooster::myNivel() == "GENERAL") {
-			$this->form[] = ['label' => 'Yacimiento', 'name' => 'id_yacimiento', 'type' => 'select', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-4', 'datatable' => 'yacimientos,nombre_corto,id', 'value' => CRUDBooster::mySedeId()];
+			$this->form[] = ['label' => 'Yacimiento', 'name' => 'id_yacimiento', 'type' => 'select', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-4', 'datatable' => 'yacimientos,nombre_corto,id', 'value' => CRUDBooster::myYacimientoId()];
 		} else {
-			$this->form[] = ['label' => 'Yacimiento', 'name' => 'id_yacimiento', 'type' => 'hidden', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-4', 'value' => CRUDBooster::mySedeId()];
+			$this->form[] = ['label' => 'Yacimiento', 'name' => 'id_yacimiento', 'type' => 'hidden', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-4', 'value' => CRUDBooster::myYacimientoId()];
 		}
 		$this->form[] = ["label" => "Contraseña", "name" => "password", "type" => "password", "help" => "Dejar vacía si no ha cambiado", 'width' => 'col-sm-6'];
 		$this->form[] = ['label' => 'Color del Tema', 'name' => 'theme_color', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-3', 'dataenum' => 'light-skin-primary|Light Skin Primary;light-skin-spoty|Light Skin Spoty;dark-skin-navi|Dark Skin Navi; dark-skin-black|Dark Skin Black', 'value' => '1'];
 
 		$this->form[] = ["label" => "Envío de correos", "type" => "header", "name" => "imagen_firma", "collapsed" => false];
-		$this->form[] = ['label' => 'Recibir Notificaciones', 'name' => 'notificacion', 'type' => 'radio', 'validation' => 'min:1|max:2', 'width' => 'col-sm-3', 'dataenum' => '1|Sí;0|No', 'value' => '1'];
+		$this->form[] = ['label' => 'Recibir Notificaciones', 'name' => 'notificacion', 'type' => 'radio', 'validation' => 'min:1|max:2', 'width' => 'col-sm-3', 'dataenum' => '1|SI;0|NO', 'value' => '1'];
 		$this->form[] = ["label" => "Contraseña Correo", "name" => "password_email", "type" => "text", "help" => "Contraseña de correo", 'width' => 'col-sm-6'];
 		$this->form[] = ["label" => "Firma", "name" => "imagen_firma", "type" => "upload", "help" => "Resolución recomendada 500x500px", 'required' => false, 'validation' => '|image|max:2000', 'resize_width' => 500, 'resize_height' => 500, 'width' => 'col-sm-6'];
 
 		# END FORM DO NOT REMOVE THIS LINE
-
-
 		$modulo = CRUDBooster::getCurrentMethod();
 
 		if ($modulo == "getAdd" || $modulo == "getEdit" || $modulo == "getProfile") {
@@ -135,7 +133,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		if (CRUDBooster::myNivel() == "LIMITADO") {
 			$query->where('cms_users.id_user_create', '=', CRUDBooster::myId());
 		} else if (CRUDBooster::myNivel() == "LOCAL") {
-			$query->where('cms_users.id_yacimiento', '=', CRUDBooster::mySedeId());
+			$query->where('cms_users.id_yacimiento', '=', CRUDBooster::myYacimientoId());
 		} else {
 		}
 

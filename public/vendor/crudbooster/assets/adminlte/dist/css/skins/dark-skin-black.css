@@ -294,6 +294,10 @@ CONTENIDO
 .dark-skin-black .hero h3 {
     color: var(--dark-skin-black-color-input);
 }
+.dark-skin-black .btn-secondary,
+.dark-skin-black .btn-secondary:hover{
+    color: var(--dark-skin-black-color-active);
+}
 
 /*------------------------------------------------------------
 FANCYBOX
@@ -569,4 +573,23 @@ TABLE FOOTER
 .dark-skin-black .pagination > li > span:hover {
     background-color: transparent;
     color: var(--dark-skin-black-color-active);
+}
+
+.dark-skin-black .loading {
+    background-color: var(--dark-skin-black-bg-background);
+    cursor: not-allowed;
+    color: var(--dark-skin-black-color-active);
+}
+
+.dark-skin-black .loading .loading-form {
+    background-color: var(--dark-skin-black-bg-active);
+    cursor: not-allowed;
+}
+
+/*------------------------------------------------------------
+SWEET ALERT
+--------------------------------------------------------------*/
+
+.dark-skin-black .sweet-alert {
+    background-color: var(--dark-skin-black-bg-container) !important;
 }

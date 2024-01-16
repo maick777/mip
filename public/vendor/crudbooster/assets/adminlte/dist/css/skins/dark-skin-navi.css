@@ -292,6 +292,11 @@ CONTENIDO
     color: var(--dark-skin-navi-color-input);
 }
 
+.dark-skin-navi .btn-secondary,
+.dark-skin-navi .btn-secondary:hover {
+    color: var(--dark-skin-navi-color-active);
+}
+
 /*------------------------------------------------------------
 FANCYBOX
 --------------------------------------------------------------*/
@@ -568,14 +573,20 @@ TABLE FOOTER
     color: var(--dark-skin-navi-color-active);
 }
 
-.loading {
+.dark-skin-navi .loading {
     background-color: var(--dark-skin-navi-bg-background);
     cursor: not-allowed;
     color: var(--dark-skin-navi-color-active);
 }
 
-.loading .loading-form {
+.dark-skin-navi .loading .loading-form {
     background-color: var(--dark-skin-navi-bg-active);
     cursor: not-allowed;
 }
+/*------------------------------------------------------------
+SWEET ALERT
+--------------------------------------------------------------*/
 
+.dark-skin-navi .sweet-alert {
+    background-color: var(--dark-skin-navi-bg-container) !important;
+}

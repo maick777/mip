@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ClientesExport;
+use App\Exports\trabajadorsExport;
 use App\Models\Cliente;
 use PDF;
 use Carbon\Carbon;
@@ -13,12 +13,13 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster as CRUDBooster;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\App;
 use Maatwebsite\Excel\Facades\Excel;
+use PHPExcel_Style_Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 setlocale(LC_TIME, App::getLocale());
 
 class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controllers\CBController
 {
-
 
 	public function cbInit()
 	{
@@ -30,7 +31,7 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		$this->global_privilege = false;
 		$this->button_table_action = true;
 		$this->button_bulk_action = false;
-		$this->button_action_style = "button_icon"; //button_icon
+		$this->button_action_style = "dropdown"; //button_icon
 		$this->button_add = true;
 		$this->button_edit = true;
 		$this->button_delete = true;
@@ -48,25 +49,24 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		$this->col[] = ["label" => "Foto", "name" => "foto", "width" => "55", "image" => 1];
 		if (CRUDBooster::isUpdate() && $this->button_edit) {
 			$this->col[] = ["label" => "", "name" => "id", "width" => "20", "callback" => function ($row) {
-				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
+				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_edit_data") . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
 			}];
 		}
 		$this->col[] = ["label" => "Apellidos & Nombres", "name" => "nombre_completo", "callback" => function ($row) {
-			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" class="table-link">' . $row->nombre_completo . '</a>' :  $row->nombre_completo;
+			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_detail_data") . '" class="table-link">' . $row->nombre_completo . '</a>' :  $row->nombre_completo;
 		}];
-		$this->col[] = ["label" => "Cargo", "name" => "id_tipo_cargo", "join" => "tipo_cargos,nombre", 'visible' => false];
+		$this->col[] = ["label" => "Cargo", "name" => "id_tipo_cargo", "JOIN" => "tipo_cargos,nombre", 'visible' => false];
 		$this->col[] = [
 			"label" => "Cargo actual", "name" => "id_tipo_cargo",
 			"callback" => function ($row) {
 				$rows = DB::table('contratos')
-					->join('tipo_cargos', 'tipo_cargos.id', 'contratos.id_tipo_cargo')
+					->JOIN('tipo_cargos', 'tipo_cargos.id', 'contratos.id_tipo_cargo')
 					->where('contratos.id_trabajador', "=", $row->id)
 					->select('tipo_cargos.nombre', 'tipo_cargos.color')
 					->first();
 				return $rows->nombre ? $rows->nombre : "";
 			}
 		];
-
 		$this->col[] = ["label" => "N° Documento", "name" => "nro_documento", 'visible' => false];
 		$this->col[] = [
 			"label" => "Documento", "name" => "id_tipo_documento",
@@ -79,8 +79,7 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 				return  $rows->nombre . ': ' . $row->nro_documento;
 			}
 		];
-
-		$this->col[] = ["label" => "Género", "name" => "id_genero", "join" => "generos,nombre", "visible" => false];
+		$this->col[] = ["label" => "Género", "name" => "id_genero", "JOIN" => "generos,nombre", "visible" => false];
 		$this->col[] = [
 			"label" => "Género", "name" => "id_genero",
 			"callback" => function ($row) {
@@ -91,15 +90,13 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 				return $row->id_genero ? "<i class='$rows->icon text-$rows->color'></i> $rows->nombre" : "";
 			}
 		];
-
 		$this->col[] = ["label" => "Celular", "name" => "celular", "callback" => function ($row) {
 			$celular = $row->celular;
 			$celular = str_replace("-", "", $celular);
-			return ($row->celular) ? "<a href='https://wa.me/+51$celular' target='_blank' class='table-link'><i class=\"fa fa-whatsapp text-success\"></i>&nbsp;$row->celular</a>" : "&nbsp;";
+			return ($row->celular) ? "<a href='https://wa.me/+51$celular' target='_blank' data-toggle='tooltip' title='Enviar mensage' class='table-link'><i class=\"fa fa-whatsapp text-success\"></i>&nbsp;$row->celular</a>" : "&nbsp;";
 		}];
-
 		$this->col[] = [
-			"label" => "Estado", "name" => "id_estado", "join" => "estados,estado_activacion",
+			"label" => "Estado", "name" => "id_estado", "JOIN" => "estados,estado_activacion",
 			"callback" => function ($row) {
 				$rows = DB::table('estados')
 					->where('id', "=", $row->id_estado)
@@ -113,14 +110,12 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
 		$this->form[] = ['label' => 'Tipo Documento', 'name' => 'id_tipo_documento', 'type' => 'select', 'validation' => 'integer|min:0', 'width' => 'col-sm-4', 'datatable' => 'tipo_documentos,nombre,id', 'datatable_where' => 'id = ' . 1, 'value' => 1];
-		$this->form[] = ['label' => 'Nro Documento', 'name' => 'nro_documento', 'type' => 'text', "help" => "Presione enter para buscar", 'validation' => 'sometimes|min:8|max:8|unique:clientes,usuario,', 'width' => 'col-sm-4'];
+		$this->form[] = ['label' => 'Nro Documento', 'name' => 'nro_documento', 'type' => 'text', "help" => "Presione enter para buscar", 'validation' => 'sometimes|min:8|max:8|unique:trabajadors,nro_documento,', 'width' => 'col-sm-4'];
 		$this->form[] = ['label' => 'Apellidos', 'name' => 'apellidos', 'type' => 'text', 'validation' => 'required|string|min:5|max:50', 'width' => 'col-sm-6'];
 		$this->form[] = ['label' => 'Nombres', 'name' => 'nombres', 'type' => 'text', 'validation' => 'required|string|min:3|max:50', 'width' => 'col-sm-6'];
 		$this->form[] = ['label' => 'Género', 'name' => 'id_genero', 'type' => 'select', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-4', 'datatable' => 'generos,nombre,id'];
-		$this->form[] = ['label' => 'Fecha Nacimiento', 'name' => 'fecha_nacimiento', 'type' => 'date', 'validation' => 'date', 'width' => 'col-sm-4'];
+		$this->form[] = ['label' => 'Fecha Nacimiento', 'name' => 'fecha_nacimiento', 'type' => 'date', 'validation' => 'date|max:2023-01-01', 'width' => 'col-sm-4'];
 		$this->form[] = ["label" => "Foto", "name"    => "foto", "type" => "upload", "help" => "Resolución recomendada 500x500px", 'validation' => 'file|max:2000', 'resize_width' => 500, 'resize_height' => 500, 'width' => 'col-sm-6'];
-		$this->form[] = ['label' => 'Estado', 'name' => 'id_estado', 'type' => 'select', 'datatable' => 'estados,estado_activacion,id', 'datatable_where' => 'grupo = ' . 1, 'width' => 'col-sm-4', 'value' => 1];
-
 
 		# CONTACTO Y DIRECCIÓN
 		$this->form[] = ["label" => "Contacto & Ubicación", "type" => "header", "name" => "correo", "collapsed" => false];
@@ -134,11 +129,9 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		$this->form[] = ['label' => 'Dirección', 'name' => 'direccion', 'type' => 'text', 'validation' => 'min:5|max:70', 'width' => 'col-sm-6'];
 		$this->form[] = ['label' => 'Detalle', 'name' => 'detalle', 'type' => 'textarea', 'validation' => 'string|min:5|max:1000', 'width' => 'col-sm-6'];
 
-		# DIAS ESPECIALES
-		$this->form[] = ['label' => 'Listable', 'name' => 'listable', 'type' => 'hidden', 'value' => 0];
 		$this->form[] = ['label' => 'User Create', 'name' => 'id_user_create', 'type' => 'hidden', 'validation' => 'integer|min:0', 'value' => CRUDBooster::myId()];
 		$this->form[] = ['label' => 'User Update', 'name' => 'id_user_update', 'type' => 'hidden', 'validation' => 'integer|min:0',  'value' => CRUDBooster::myId()];
-		# CONYUGUE
+
 
 		# END FORM DO NOT REMOVE THIS LINE
 
@@ -170,14 +163,15 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		    | 
 		*/
 		$this->addaction = array();
-
+		$this->addaction[] = ['label' => '',  'title' => 'Desactivar', 'icon' => 'fa fa-toggle-on', 'color' => 'success', 'url' => CRUDBooster::mainpath('desactivar/[id]'), 'showIf' => "[id_estado] == 1", 'confirmation' => true];
+		$this->addaction[] = ['label' => '',  'title' => 'Activar', 'icon' => 'fa fa-toggle-off', 'color' => 'secondary', 'url' => CRUDBooster::mainpath('activar/[id]'), 'showIf' => "[id_estado] == 2", 'confirmation' => true];
 
 		/* 
 		    | ---------------------------------------------------------------------- 
 		    | Add More Button Selected
 		    | ----------------------------------------------------------------------     
 		    | @label       = Label of action 
-		    | @icon 	   = Icon from fontawesome
+		    | @icon 	   = Icon FROM fontawesome
 		    | @name 	   = Name of button 
 		    | Then about the action, you should code at actionButtonSelected method 
 		    | 
@@ -203,13 +197,13 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		    | ----------------------------------------------------------------------     
 		    | @label = Name of button 
 		    | @url   = URL Target
-		    | @icon  = Icon from Awesome.
+		    | @icon  = Icon FROM Awesome.
 		    | 
 		*/
 		$this->index_button = array();
 		if (CRUDBooster::getCurrentMethod() == "getIndex") {
-			$this->index_button[] = ['label' => 'Ver Reportes', 'url' => CRUDBooster::mainpath("dashboard-clientes"), "icon" => "fa fa-bar-chart"];
-			$this->index_button[] = ['label' => 'Descargar Resumen', 'url' => CRUDBooster::mainpath("download-pdf-clientes"), "icon" => "fa fa-download", "color" => "danger"];
+			$this->index_button[] = ['label' => 'Dashboard', 'url' => CRUDBooster::mainpath("dashboard"), "icon" => "fa fa-bar-chart"];
+			$this->index_button[] = ['label' => 'Resumen', 'url' => CRUDBooster::mainpath('pdf/[id]'), 'icon' => 'fa fa-file-pdf-o', 'color' => 'danger'];
 		}
 
 		/* 
@@ -417,7 +411,7 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 
 					$('#fecha_inicio').change(function () {
 						var fechaArr = $('#fecha_inicio').val().split('-');
-						$('#fecha_fin').val([Number(fechaArr[0])+1, fechaArr[1], fechaArr[2]].join('-'));
+						$('#fecha_fin').val([Number(fechaArr[0])+1, fechaArr[1], fechaArr[2]].JOIN('-'));
 					});
 
 				
@@ -444,7 +438,7 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 					//CALCULAR EDAD
 					ubigeos();
 					nro_documento();
-					//BUSCAR CLIENTES
+					//BUSCAR trabajadors
 					$('#nro_documento').keydown(function(event){
 						if (event.which == 13){
 							event.preventDefault();
@@ -461,8 +455,12 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		}
 
 		if ($modulo == "getIndex") {
-			$this->script_js = "
 
+			$url_desactivar = CRUDBooster::mainpath('open-anular/');
+			$url_activar = CRUDBooster::mainpath('open-activar/');
+
+			$this->script_js = "  
+			
 			$(function() {
 
 				$('#resumen').click(function() {
@@ -474,7 +472,69 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 					}, 2000);
 				  });
 		
-			});";
+			});
+			
+			function desactivar(id) {
+				//alert(id);
+				$.fancybox.open({
+					src  : '$url_desactivar'+id,
+					type : 'iframe',
+					opts : {
+						iframe:{
+							css:{
+								width:800,
+								height:600
+							}
+						},
+						afterShow : function( instance, current ) {
+							console.info( 'popup anular done!' );
+						},
+						beforeClose: function(instance, current, e) {
+							reload = $('.fancybox-iframe').contents().find('#reload').val();
+							reload = (reload === 'true') ? true : false;
+							console.info(\"reload: \" + reload);
+						},
+						afterClose: function(instance, current) {
+							console.info('popup closed!');
+							if (reload) {
+								console.info('recargar listado');
+								location.reload(true);
+							}
+						}
+					}
+				});
+			}
+			function activar(id) {
+				//alert(id);
+				$.fancybox.open({
+					src  : '$url_activar'+id,
+					type : 'iframe',
+					opts : {
+						iframe:{
+							css:{
+								width:800,
+								height:600
+							}
+						},
+						afterShow : function( instance, current ) {
+							console.info( 'popup anular done!' );
+						},
+						beforeClose: function(instance, current, e) {
+							reload = $('.fancybox-iframe').contents().find('#reload').val();
+							reload = (reload === 'true') ? true : false;
+							console.info(\"reload: \" + reload);
+						},
+						afterClose: function(instance, current) {
+							console.info('popup closed!');
+							if (reload) {
+								console.info('recargar listado');
+								location.reload(true);
+							}
+						}
+					}
+				});
+			}
+			";
 		}
 
 		/*
@@ -565,7 +625,7 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		if (CRUDBooster::myPrivilegeName() == "Super Administrator") {
 		} else if (CRUDBooster::myPrivilegeName() == "Administrador") {
 		} else {
-			$query->where('clientes.id_user_create', '=', CRUDBooster::myId());
+			$query->where('trabajadors.id_user_create', '=', CRUDBooster::myId());
 		}
 	}
 
@@ -603,7 +663,7 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 
 		if (isset($nro_documento)) {
 
-			$hasDocumento = DB::table('clientes')->where([
+			$hasDocumento = DB::table('trabajadors')->where([
 				['id_tipo_documento', '=', $id_tipo_documento],
 				['nro_documento', '=', $nro_documento]
 			])->get();
@@ -615,7 +675,7 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		}
 		if (isset($email)) {
 
-			$hasEmail = DB::table('clientes')->where([
+			$hasEmail = DB::table('trabajadors')->where([
 				['email', '=', $email],
 			])->get();
 
@@ -655,7 +715,7 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 
 		if ($id_conyugue > 0) {
 
-			DB::table('clientes')
+			DB::table('trabajadors')
 				->where('id', '=', $id_conyugue)
 				->update([
 					'id_conyugue' => $id,
@@ -677,13 +737,13 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 		}
 
 		/*
-		$query_categorias = DB::select('SELECT COUNT(c.id_categoria) AS total, ca.nombre_p AS categoria
-										FROM clientes AS c
+		$query_categorias = DB::select('SELECT COUNT(t.id_categoria) AS total, ca.nombre_p AS categoria
+										FROM trabajadors AS c
 										LEFT JOIN categorias AS ca 
-										ON c.id_categoria = ca.id
-										WHERE c.listable = 0
-										GROUP BY c.id_categoria, ca.nombre_p
-										ORDER BY c.id_categoria ASC;');
+										ON t.id_categoria = ca.id
+										WHERE t.listable = 0
+										GROUP BY t.id_categoria, ca.nombre_p
+										ORDER BY t.id_categoria ASC;');
 
 										*/
 
@@ -765,6 +825,43 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 
 	//By the way, you can still create your own method in here... :) 
 
+
+	/* 
+	    | ---------------------------------------------------------------------- 
+	    | ESTADOS
+	    | ----------------------------------------------------------------------     
+	    | 
+	*/
+
+
+	public function getActivar($id)
+	{
+
+		DB::table('trabajadors')
+			->where('id', '=', $id)
+			->update([
+				'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+				'id_estado' => 1,
+				'listable' => 1
+
+			]);
+		CRUDBooster::redirect($_SERVER['HTTP_REFERER'], "Registro desactivado!", "success");
+	}
+
+	public function getDesactivar($id)
+	{
+		DB::table('trabajadors')
+			->where('id', '=', $id)
+			->update([
+				'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+				'id_estado' => 2,
+				'listable' => 0
+			]);
+		CRUDBooster::redirect($_SERVER['HTTP_REFERER'], "Registro desactivado!", "success");
+	}
+
+
+
 	/* 
 	    | ---------------------------------------------------------------------- 
 	    | DASHBOARD GRÁFICO :: GET/POST
@@ -772,191 +869,114 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 	    | 
 	*/
 
-	public function getDashboardClientes()
+	public function getDashboard()
 	{
 
-		setlocale(LC_ALL, 'es_ES');
-
-		$categorias 	= DB::table('categorias')->orderBy('id', 'asc')->get();
 		$generos 		= DB::table('generos')->orderBy('id', 'asc')->get();
-		$estado_civils 	= DB::table('estado_civils')->orderBy('id', 'asc')->get();
-		$estados 		= DB::table('estados')->orderBy('id', 'asc')->get();
+		$estados 		= DB::table('estados')->orderBy('id', 'asc')->where('grupo', 1)->get();
 
-		$query_categorias = DB::select('SELECT COUNT(c.id_categoria) AS total, ca.nombre_p AS categoria
-										FROM clientes AS c
-										LEFT JOIN categorias AS ca 
-										ON c.id_categoria = ca.id
-										WHERE c.listable = 0
-										GROUP BY c.id_categoria, ca.nombre_p
-										ORDER BY c.id_categoria ASC;');
+		$query_generos = DB::select('SELECT COUNT(t.id_genero) as total, tg.nombre as genero
+								FROM trabajadors AS t
+								INNER JOIN generos as tg
+								on t.id_genero = tg.id
+								GROUP BY t.id_genero, tg.nombre
+								ORDER BY t.id_genero ASC;');
 
-		$query_tipo_clientes = DB::select('SELECT COUNT(c.id_tipo_clientes) AS total, tc.nombre_p AS cliente
-								FROM clientes AS c
-								LEFT JOIN tipo_clientes AS tc
-								ON c.id_tipo_clientes = tc.id
-								WHERE c.listable = 0
-								GROUP BY c.id_tipo_clientes, tc.nombre_p
-								ORDER BY c.id_tipo_clientes ASC;');
+		$query_estados = DB::select('SELECT COUNT(t.id_estado) as total, e.estado_activacion as estado
+								FROM trabajadors AS t
+								INNER JOIN estados as e
+								on t.id_estado = e.id
+								GROUP BY t.id_estado, e.estado_activacion
+								ORDER BY t.id_estado ASC;');
 
-		$query_generos = DB::select('SELECT COUNT(c.id_genero) as total, tg.nombre as genero
-								from clientes AS c
-								left join generos as tg
-								on c.id_genero = tg.id
-								WHERE c.listable = 0
-								GROUP BY c.id_genero, tg.nombre
-								ORDER BY c.id_genero ASC;');
-
-		$data_categorias = array();
-		$data_tipo_clientes = array();
+		$data_estados = array();
 		$data_generos = array();
 
-		foreach ($query_categorias as $row) {
-			array_push($data_categorias, $row);
-		}
-		foreach ($query_tipo_clientes as $row) {
-			array_push($data_tipo_clientes, $row);
-		}
+
+
 		foreach ($query_generos as $row) {
 			array_push($data_generos, $row);
 		}
+		foreach ($query_estados as $row) {
+			array_push($data_estados, $row);
+		}
 
+		$label_genero = json_encode(array_column($data_generos, 'genero'));
+		$value_genero = json_encode(array_column($data_generos, 'total'));
 
-		$labels_categoria = json_encode(array_column($data_categorias, 'categoria'));
-		$values_categoria = json_encode(array_column($data_categorias, 'total'));
-
-		$labels_tipo_cliente = json_encode(array_column($data_tipo_clientes, 'cliente'));
-		$values_tipo_cliente = json_encode(array_column($data_tipo_clientes, 'total'));
-
-		$labels_genero = json_encode(array_column($data_generos, 'genero'));
-		$values_genero = json_encode(array_column($data_generos, 'total'));
+		$label_estado = json_encode(array_column($data_estados, 'estado'));
+		$value_estado = json_encode(array_column($data_estados, 'total'));
 
 		$data = compact(
-			'categorias',
 			'generos',
-			'estado_civils',
 			'estados',
-			'labels_categoria',
-			'labels_tipo_cliente',
-			'labels_genero',
-			'values_categoria',
-			'values_tipo_cliente',
-			'values_genero'
+			'label_genero',
+			'value_genero',
+			'label_estado',
+			'value_estado'
 		);
 
-		return view('dashboard.dashboard-clientes', $data);
+		return view('dashboard.trabajadores_dashboard', $data);
 	}
 
-	public function postDashboardClientes(HttpRequest $request)
+	public function postDashboard(HttpRequest $request)
 	{
 
-		$id_categoria = (isset($request->id_tipo_clientes)) ? (int)$request->id_tipo_clientes : 0;
-		$id_tipo_clientes = (isset($request->id_tipo_clientes)) ? (int)$request->id_tipo_clientes : 0;
 		$id_genero = (isset($request->id_genero)) ? (int)$request->id_genero : 0;
+		$generos 		= DB::table('generos')->orderBy('id', 'asc')->get();
 
 		$id_estado = (isset($request->id_estado)) ? (int)$request->id_estado : 0;
-		$id_estado_civil = (isset($request->id_estado_civil)) ? (int)$request->id_estado_civil : 0;
-
-		$categorias 	= DB::table('categorias')->orderBy('id', 'asc')->get();
-		$generos 		= DB::table('generos')->orderBy('id', 'asc')->get();
-		$estado_civils 	= DB::table('estado_civils')->orderBy('id', 'asc')->get();
-		$estados 		= DB::table('estados')->orderBy('id', 'asc')->get();
-
-
-
-		//QUERY CATEGORIA
-		$query_categorias = 'SELECT COUNT(c.id_tipo_clientes) AS total, ca.nombre_p AS categoria
-							FROM clientes AS c
-							LEFT JOIN categorias AS ca 
-							ON c.id_categoria = ca.id 
-							WHERE c.listable = 0 ';
-
-
-		//QUERY TIPO CLIENTES
-		$query_tipo_clientes = 'SELECT COUNT(c.id_tipo_clientes) AS total, tc.nombre AS cliente
-								FROM clientes AS c
-								LEFT JOIN tipo_clientes AS tc
-								ON c.id_tipo_clientes = tc.id WHERE c.listable = 0 ';
+		$estados 		= DB::table('estados')->orderBy('id', 'asc')->where('grupo', 1)->get();
 
 		//QUERY GÉNERO
-		$query_generos = 'SELECT COUNT(c.id_genero) as total, g.nombre as genero
-								from clientes AS c
-								left join generos as g
-								on c.id_genero = g.id WHERE c.listable = 0 ';
+		$query_generos = 'SELECT COUNT(t.id_genero) as total, g.nombre as genero
+								FROM trabajadors AS t
+								INNER JOIN generos as g
+								on t.id_genero = g.id';
 
-		//PARAMETRO:: CATEGORIA
-		if ($id_categoria > 0) {
-			$query_categorias 		= $query_categorias . ' AND  c.id_tipo_clientes = ' . $id_categoria . ' ';
-			$query_tipo_clientes 	= $query_tipo_clientes . ' AND  c.id_tipo_clientes = ' . $id_categoria . ' ';
-			$query_generos 			= $query_generos . ' AND  c.id_tipo_clientes = ' . $id_categoria . ' ';
-		}
+		$query_estados = 'SELECT COUNT(t.id_estado) as total, e.estado_activacion as estado
+								FROM trabajadors AS t
+								INNER JOIN estados as e
+								on t.id_estado = e.id';
 
-		//PARAMETRO:: TIPO DE CLIENTE
-		if ($id_tipo_clientes > 0) {
-			$query_categorias 		= $query_categorias . ' AND  c.tipo_clientes = ' . $id_tipo_clientes . ' ';
-			$query_tipo_clientes 	= $query_tipo_clientes . ' AND  c.tipo_clientes = ' . $id_tipo_clientes . ' ';
-			$query_generos 			= $query_generos . ' AND  c.tipo_clientes = ' . $id_tipo_clientes . ' ';
-		}
 
 		//PARAMETRO:: TIPO GÉNERO
 		if ($id_genero > 0) {
-			$query_categorias 		= $query_categorias . ' AND  c.id_genero = ' . $id_genero . ' ';
-			$query_tipo_clientes 	= $query_tipo_clientes . ' AND  c.id_genero = ' . $id_genero . ' ';
-			$query_generos 			= $query_generos . ' AND  c.id_genero = ' . $id_genero . ' ';
+			$query_estados 	= $query_estados . ' AND  t.id_genero = ' . $id_genero . ' ';
+			$query_generos 	= $query_generos . ' AND  t.id_genero = ' . $id_genero . ' ';
 		}
 
 		//PARAMETRO:: ESTADO
 		if ($id_estado > 0) {
-			$query_categorias 		= $query_categorias . ' AND  c.id_estado = ' . $id_estado . ' ';
-			$query_tipo_clientes 	= $query_tipo_clientes . ' AND  c.id_estado = ' . $id_estado . ' ';
-			$query_generos 			= $query_generos . ' AND  c.id_estado = ' . $id_estado . ' ';
+			$query_estados 	= $query_estados . ' AND  t.id_estado = ' . $id_estado . ' ';
+			$query_generos 	= $query_generos . ' AND  t.id_estado = ' . $id_estado . ' ';
 		}
 
-		//PARAMETRO:: ESTADO CIVIL
-		if ($id_estado_civil > 0) {
-			$query_categorias 		= $query_categorias . ' AND  c.id_estado_civil = ' . $id_estado_civil . ' ';
-			$query_tipo_clientes 	= $query_tipo_clientes . ' AND  c.id_estado_civil = ' . $id_estado_civil . ' ';
-			$query_generos 			= $query_generos . ' AND  c.id_estado_civil = ' . $id_estado_civil . ' ';
-		}
+		$query_estados 	= $query_estados . " GROUP BY t.id_estado, e.estado_activacion ORDER BY t.id_estado ASC;";
+		$query_generos 	= $query_generos . " GROUP BY t.id_genero, g.nombre ORDER BY t.id_genero ASC;";
 
-		$query_categorias 		= $query_categorias . " GROUP BY c.id_categoria, ca.nombre_p ORDER BY c.id_categoria ASC;";
-		$query_tipo_clientes 	= $query_tipo_clientes . " GROUP BY c.id_tipo_clientes, tc.nombre ORDER BY c.id_tipo_clientes ASC;";
-		$query_generos 			= $query_generos . " GROUP BY c.id_genero, g.nombre ORDER BY c.id_genero ASC;";
+		$data_estados 	= DB::select($query_estados);
+		$data_generos 	= DB::select($query_generos);
 
 
-		$data_categorias 	= DB::select($query_categorias);
-		$data_tipo_clientes = DB::select($query_tipo_clientes);
-		$data_generos 		= DB::select($query_generos);
+		$label_estado = json_encode(array_column($data_estados, 'estado'));
+		$value_estado = json_encode(array_column($data_estados, 'total'));
 
-		$labels_categoria = json_encode(array_column($data_categorias, 'categoria'));
-		$values_categoria = json_encode(array_column($data_categorias, 'total'));
-
-		$labels_tipo_cliente = json_encode(array_column($data_tipo_clientes, 'cliente'));
-		$values_tipo_cliente = json_encode(array_column($data_tipo_clientes, 'total'));
-
-		$labels_genero = json_encode(array_column($data_generos, 'genero'));
-		$values_genero = json_encode(array_column($data_generos, 'total'));
-
-
+		$label_genero = json_encode(array_column($data_generos, 'genero'));
+		$value_genero = json_encode(array_column($data_generos, 'total'));
 
 		$data = compact(
 			'id_estado',
-			'id_estado_civil',
-			'id_categoria',
-			'id_tipo_clientes',
 			'id_genero',
-			'categorias',
 			'generos',
-			'estado_civils',
 			'estados',
-			'labels_categoria',
-			'labels_tipo_cliente',
-			'labels_genero',
-			'values_categoria',
-			'values_tipo_cliente',
-			'values_genero'
+			'label_genero',
+			'value_genero',
+			'label_estado',
+			'value_estado'
 		);
 
-		return view('dashboard.dashboard-clientes', $data);
+		return view('dashboard.trabajadores_dashboard', $data);
 	}
 
 
@@ -968,103 +988,143 @@ class AdminTrabajadoresController extends \crocodicstudio\crudbooster\controller
 	    | 
 	*/
 
-	public function getDownloadPdfClientes()
+	/* 
+	    | ---------------------------------------------------------------------- 
+	    | REPORTES
+	    | ----------------------------------------------------------------------     
+	    | 
+	*/
+
+
+	public function getPdf($id)
+	{
+		$vista_informe = 'files.pdf.trabajadores_pdf';
+		$data = self::getDataPdf($id);
+		$pdf = App::make('dompdf.wrapper');
+		$context = stream_context_create([
+			'ssl' => [
+				'verify_peer' => FALSE,
+				'verify_peer_name' => FALSE,
+				'allow_self_signed' => TRUE
+			]
+		]);
+		$pdf->getDomPDF()->setHttpContext($context);
+		$pdf->loadView($vista_informe, $data);
+		return $pdf->stream();
+	}
+
+	public static function getDataPdf($id)
 	{
 
-		//QUERY CATEGORIA
-		$query_categorias = 'SELECT COUNT(c.id_categoria) AS total, ca.nombre_p AS categoria
-							FROM clientes AS c
-							LEFT JOIN categorias AS ca 
-							ON c.id_categoria = ca.id 
-							WHERE c.listable = 0
-							GROUP BY c.id_categoria, ca.nombre_p ORDER BY c.id_categoria ASC;';
-
-		//QUERY TIPO CLIENTE
-		$query_tipo_clientes = 'SELECT COUNT(c.id_tipo_clientes) AS total, tc.nombre_p AS cliente
-								FROM clientes AS c
-								LEFT JOIN tipo_clientes AS tc
-								ON c.id_tipo_clientes = tc.id 
-								WHERE c.listable = 0 
-								GROUP BY c.id_tipo_clientes, tc.nombre_p ORDER BY c.id_tipo_clientes ASC;';
-
-
-		//QUERY GÉNERO
-		$query_generos = 'SELECT COUNT(c.id_genero) as total, tg.nombre as genero
-						from clientes AS c
-						left join generos as tg
-						on c.id_genero = tg.id 
-						WHERE c.listable = 0 
-						GROUP BY c.id_genero, tg.nombre ORDER BY c.id_genero ASC;';
-		//TOTAL GENERAL
-		$query_total = 'SELECT COUNT(id) as total
-						from clientes 
-						WHERE listable = 0;';
-
-		$categorias 	= DB::select($query_categorias);
-		$tipo_clientes 	= DB::select($query_tipo_clientes);
-		$generos 		= DB::select($query_generos);
-		$total_general 	= DB::select($query_total);
-
-		$fecha =  strtoupper(Carbon::parse(now())->isoFormat('DD MMM Y'));
-
-		foreach ($total_general as $row) {
-			$total = $row->total;
+		$where_yacimiento = ' ';
+		if (CRUDBooster::myNivel() != "GENERAL") {
+			$where_yacimiento = ' AND id_yacimiento = ' . CRUDBooster::mySedeId();
 		}
 
+		//QUERY TIPO MIEMBRO
+		$query_estados = 'SELECT COUNT(t.id_estado) as total, e.estado_activacion as estado
+						FROM trabajadors AS t
+						INNER JOIN estados AS e  ON t.id_estado = e.id 
+						WHERE ' . $where_yacimiento . '
+						GROUP BY t.id_estado, e.estado_activacion 
+						ORDER BY t.id_estado ASC;';
+
+		//QUERY GÉNERO
+		$query_generos = 'SELECT COUNT(t.id_genero) as total, g.nombre as genero
+						FROM trabajadors AS t
+						INNER JOIN generos as g ON t.id_genero = g.id 
+						WHERE ' . $where_yacimiento . '
+						GROUP BY t.id_genero, g.nombre ORDER BY t.id_genero ASC;';
+
+		//TOTAL GENERAL
+		$query_total = 'SELECT COUNT(id) as total
+						FROM trabajadors 
+						WHERE ' . $where_yacimiento;
+
+		$estados 		= DB::select($query_estados);
+		$generos 		= DB::select($query_generos);
+		$query_total 	= DB::select($query_total);
+		$fecha =  date('Ymd_His') . CRUDBooster::myId() . rand(0, 9);
+
+		foreach ($query_total as $row) {
+			$total = $row->total;
+		}
 		$data = compact(
-			'categorias',
-			'tipo_clientes',
+			'estados',
 			'generos',
 			'total',
 			'fecha'
 		);
-
-		//CARGANDO VISTA PDF
-		$pdf = PDF::loadView('download.download_clientes_pdf', $data);
-		$now = Carbon::now();
-		$fecha_descarga = $now->format('Ymd-His');
-
-		return $pdf->stream();
-		//cómo agregar  paginador en  dompdf  laravel
-
-		return $pdf->download('RESUMEN-clientes-' . $fecha_descarga . CRUDBooster::myId() . '.pdf');
+		return $data;
 	}
 
-	public function postDownloadExcelClientes(HttpRequest $request)
+
+	public function postExcelTrabajadores(HttpRequest $request)
 	{
 
 		$id_estado = $request->id_estado;
-		$id_estado_civil = $request->id_estado_civil;
+		$id_genero = $request->id_genero;
 
-		$query_clientes = 'SELECT c.*, g.nombre AS genero, ca.nombre AS categoria, e.nombre AS estado, tc.nombre AS tipo_cliente, ec.nombre AS estado_civil
-							FROM clientes AS c
-							LEFT JOIN generos AS g ON c.id_genero = g.id
-							LEFT JOIN categorias AS ca ON c.id_categoria = ca.id
-							LEFT JOIN estados AS e ON c.id_estado = e.id
-							LEFT JOIN tipo_clientes AS tc  ON c.id_tipo_clientes = tc.id
-							LEFT JOIN estado_civils AS ec  ON c.id_estado_civil = ec.id
-							WHERE c.listable = 0 ';
+		$where_yacimiento = ' ';
+		if (CRUDBooster::myNivel() != "GENERAL") {
+			$where_yacimiento = 'WHERE id_yacimiento = ' . CRUDBooster::mySedeId();
+		}
 
+		$query_trabajadores = 'SELECT t.*, g.nombre AS genero, e.estado_activacion AS estado, td.nombre as tipo_documento
+							FROM trabajadors AS t
+							INNER JOIN generos AS g ON t.id_genero = g.id
+							INNER JOIN estados AS e ON t.id_estado = e.id
+							LEFT JOIN tipo_documentos AS td ON t.id_tipo_documento = td.id' . $where_yacimiento;
 		if ($id_estado > 0) {
-			$query_clientes = $query_clientes . 'AND c.id_estado = ' . $id_estado . ' ';
+			$query_trabajadores = $query_trabajadores . 'AND t.id_estado = ' . $id_estado . ' ';
 		}
-		if ($id_estado_civil > 0) {
-			$query_clientes = $query_clientes . 'AND c.id_estado_civil = ' . $id_estado_civil . ' ';
+		if ($id_genero > 0) {
+			$query_trabajadores = $query_trabajadores . 'AND t.id_genero = ' . $id_genero . ' ';
 		}
 
+		$query_trabajadores = $query_trabajadores . ' ORDER BY t.apellidos ASC;';
+		$trabajadores 		= DB::select($query_trabajadores);
 
-		$query_clientes = $query_clientes . ' ORDER BY c.apellidos ASC;';
-		$clientes 	= DB::select($query_clientes);
+		if (count($trabajadores)) {
 
-		$now = Carbon::now();
-		$nombre_descarga = $now->format('Ymd-His');
-		return Excel::download(new ClientesExport($clientes), $nombre_descarga . '.xlsx');
+			$data = compact('trabajadores');
+			$xls = Excel::create('trabajadores', function ($excel) use ($data) {
+				$excel->sheet('Trabajadores', function ($sheet) use ($data) {
+
+					//SALTO DE LINEA, SI EL TAMAÑO SUPERA EL LÍMITE ESTABLECIDO
+					/*$sheet->getStyle('D4')->getAlignment()->setWrapText(true);
+					$sheet->getStyle('E4')->getAlignment()->setWrapText(true);
+					$sheet->getStyle('F4')->getAlignment()->setWrapText(true);*/
+
+					//CENTRADO VERTICAL PARA TITULOS
+					for ($column = 'A'; $column <= 'K'; $column++) {
+						$cell = $column . '4';
+						$sheet->getStyle($cell)->getAlignment()->setWrapText(true)->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+					}
+
+					// FIN CENTRADO VERTICAL
+
+					$sheet->setHeight(4, 35);
+
+					$sheet->setColumnFormat(array(
+						'A' => '0',
+						'E' => 'General',
+						'F' => 'date_format:d/m/yyyy',
+						'G' => '0',
+					));
+					$sheet->loadView('files.excel.trabajadores_excel', $data);
+				});
+			})->export('xlsx');
+		} else {
+			CRUDBooster::redirect($_SERVER['HTTP_REFERER'], "Sin registros para exportar", "info");
+		}
 	}
 
-	public function apiClientes()
+
+	public function apitrabajadors()
 	{
 
-		$query = DB::select('SELECT * FROM clientes');
+		$query = DB::select('SELECT * FROM trabajadors');
 		foreach ($query as $row) {
 			$data['user'] = $row;
 		}

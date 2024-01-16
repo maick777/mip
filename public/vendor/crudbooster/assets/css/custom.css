@@ -1,16 +1,21 @@
+html {
+    overflow: hidden;
+}
 body {
     font-family: default;
 }
 
 .content {
     padding-bottom: 1px;
+    overflow-y: auto;
+    height: calc(100vh - 150px);
 }
 .table > thead > tr.active > th {
     text-transform: uppercase;
 }
 
 .text-secondary {
-    color: #6c757d !important;
+    color: rgb(38, 181, 122) !important;
 }
 
 .text-dark {
@@ -35,6 +40,7 @@ body {
 .label-secondary {
     background: #8d97a0 !important;
 }
+
 
 .label-dark {
     background: #a19393 !important;
@@ -91,6 +97,11 @@ SIDEBAR MENÚ
 }
 .sidebar a:hover {
     text-decoration: none;
+}
+
+.main-menu {
+    overflow-y: auto;
+    height: calc(100vh - 150px);
 }
 
 .sidebar-menu > li {
@@ -438,7 +449,6 @@ TABLE
     margin: 0;
     background-color: transparent;
     border-radius: 15px;
-
 }
 
 #privileges_configuration td {
@@ -505,31 +515,14 @@ TABLE
 }
 */
 
-/*
-.btn-custom-action-table {
-    background-color: transparent;
-    border-color: transparent;
+.table-link {
+  
 }
 
-.btn-custom-action-table:hover {
-    background-color: transparent;
-    border-color: transparent;
+.table-link:hover {
     transform: scale(1.3);
     transition: 0.3s ease-in-out;
 }
-
-.btn-delete.btn-custom-action-table,
-.btn-custom-action-table .icono-cross
-
-{
-    color: #ac2925;
-}
-
-.btn-edit.btn-custom-action-table,
-.btn-custom-action-table .icono-dropper {
-    color: #00a65a;
-}
-*/
 
 /*------------------------------------------------------------
 FOOTER
@@ -633,6 +626,23 @@ RESET
 }
 
 @media only screen and (max-width: 768px) {
-    .sidebar-menu a span {
-    }
 }
+
+/*CHANGES IN BOOTSTRAP*/
+/*
+.tooltip-inner {
+    background-color: #00acd6 !important;
+    color: #fff;
+    border: 1px solid #ffffff;
+  }
+  
+  .tooltip.top .tooltip-arrow {
+    border-top-color: #ffffff;
+  }
+  
+  .tooltip.right .tooltip-arrow {
+    border-right-color: #ffffff;
+  }
+  */
+  
+ 

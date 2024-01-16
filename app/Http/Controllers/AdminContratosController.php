@@ -39,11 +39,11 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 		$this->col = [];
 		if (CRUDBooster::isUpdate() && $this->button_edit) {
 			$this->col[] = ["label" => "", "name" => "id", "width" => "20", "callback" => function ($row) {
-				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
+				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" data-toggle="tooltip" title="'. trans("crudbooster.action_edit_data") .'" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
 			}];
 		}
 		$this->col[] = ["label" => "Referencia", "name" => "referencia", "width" => "200", "callback" => function ($row) {
-			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" class="table-link">' . $row->referencia . '</a>' :  $row->referencia;
+			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" data-toggle="tooltip" title="'. trans("crudbooster.action_detail_data") .'" class="table-link">' . $row->referencia . '</a>' :  $row->referencia;
 		}];
 		$this->col[] = [
 			"label" => "Trabajador", "name" => "id_trabajador",
@@ -52,7 +52,7 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 					->where('id', "=", $row->id_trabajador)
 					->select('nombre_completo')
 					->first();
-				return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" class="table-link">' . $rows->nombre_completo . '</a>' :  $rows->nombre_completo;
+				return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" data-toggle="tooltip" title="'. trans("crudbooster.action_detail_data") .'" class="table-link">' . $rows->nombre_completo . '</a>' :  $rows->nombre_completo;
 			}
 		];
 		$this->col[] = [
@@ -65,7 +65,6 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 				return $rows->nombre ? "$rows->nombre" : "";
 			}
 		];
-
 		$this->col[] = [
 			"label" => "Fec. Inicio", "name" => "fecha_inicio",
 			"callback" => function ($row) {
@@ -73,7 +72,6 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 				return  strtoupper($fecha_inicio);
 			}
 		];
-
 		$this->col[] = [
 			"label" => "Progreso pago", "name" => "id_estado",
 			"callback" => function ($row) {
@@ -116,7 +114,6 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 				}
 			}
 		];
-
 		$this->col[] = [
 			"label" => "Fec. Fin", "name" => "fecha_fin",
 			"callback" => function ($row) {
@@ -140,7 +137,7 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
 		$this->form[] = ['label' => 'Referencia', 'name' => 'referencia', 'type' => 'text', 'validation' => 'required|min:1|max:70', 'width' => 'col-sm-6', 'placeholder' => '-Autogenerado-', 'disabled' => true];
-		$this->form[] = ['label' => 'Trabajador', 'name' => 'id_trabajador', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-6', 'datatable' => 'trabajadors,nombre_completo'];
+		$this->form[] = ['label' => 'Trabajador', 'name' => 'id_trabajador', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-6', 'datatable' => 'trabajadors,nombre_completo', 'datatable_where' => 'listable = ' . 1];
 		$this->form[] = ['label' => 'Cargo', 'name' => 'id_tipo_cargo', 'type' => 'select', 'validation' => 'required', 'datatable' => 'tipo_cargos,nombre,nombre', 'width' => 'col-sm-4', 'value' => 4];
 
 		if (CRUDBooster::getCurrentMethod() == "getEdit" || CRUDBooster::getCurrentMethod() == 'postEditSave'  || CRUDBooster::getCurrentMethod() == 'getDetail') {
@@ -398,7 +395,6 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 	public function actionButtonSelected($id_selected, $button_name)
 	{
 		//Your code here
-
 	}
 
 
@@ -412,9 +408,9 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 	public function hook_query_index(&$query)
 	{
 		//Your code here
-		$id_periodo_pago  = 2; // ANUAL, MENSUAL, QUINCENAL, SEMANAL, DIARIO
+		$id_periodo_pago  = 4; // ANUAL, MENSUAL, QUINCENAL, SEMANAL, DIARIO
 		$periodo_pago     = DB::table('periodo_pagos')->where('id',  $id_periodo_pago)->first();
-		$id_tiempo_contrato = 1; // EN NÚMEROS segun ID
+		$id_tiempo_contrato = 3; // EN NÚMEROS segun ID
 		$tiempo_contrato  = DB::table('tiempo_contratos')
 			->where('tiempo_contratos.id',  $id_tiempo_contrato)
 			->join('periodo_pagos', 'tiempo_contratos.id_periodo_pago', 'periodo_pagos.id')
@@ -423,6 +419,7 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 		$index = 1;
 		$fecha_inicio = Carbon::create(2023, 10, 7);
 		$cantidad_sumar = $tiempo_contrato->cantidad;
+
 		switch ($periodo_pago->nombre) {
 			case 'ANUAL': //PAGO
 				//TIEMPO CONTRATO
@@ -466,7 +463,11 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 				break;
 		}
 		$index = 1;
+
+		//echo ('X' . $tiempo_contrato->nombre . ' PAGO: ' . $periodo_pago->nombre . 'CANTIDAD TIEMPO' . $cantidad_sumar);
+
 		while ($index <= $cantidad_sumar) {
+
 			if ($periodo_pago->nombre == 'ANUAL') {
 				/*
 				$fecha_fin_anio = $fecha_inicio->copy()->endOfYear();
@@ -476,6 +477,7 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 				$fecha_correlativo[] =  "Año " . $fecha_inicio->format('Y') . ": " . $fecha_inicio->format('Y-m-d') . "\n";
 				$fecha_inicio->modify('+1 year'); // Suma un año
 			} elseif ($periodo_pago->nombre == 'MENSUAL') {
+
 				//$fecha_inicio->addMonth(); // Agrega un mes a la fecha de inicio
 				$fecha_fin_mes = $fecha_inicio->copy()->endOfMonth();
 				$fecha_correlativo[] =  "Fin de mes $index: " . $fecha_fin_mes->toDateString() . "\n";
@@ -487,14 +489,15 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 				$fecha_correlativo[] = "Fecha quincenal $index " . $fecha_quincenal_fin_mes->toDateString() . "\n";
 				$fecha_inicio->addMonth();
 			} elseif ($periodo_pago->nombre == 'SEMANAL') {
-				// Obtén el siguiente sábado a partir de la fecha de inicio
-				$sabado = $fecha_inicio->copy()->next(Carbon::SATURDAY);
-				// Obtén el siguiente domingo a partir de la fecha de inicio
-				$domingo = $fecha_inicio->copy()->next(Carbon::SUNDAY);
 
-				$fecha_correlativo[] = "Fin de semana $index (sábado): " . $sabado->toDateString() . "\n";
-				//$fecha_correlativo[] = "Fin de semana $index (domingo): " . $domingo->toDateString() . "\n";
-				$fecha_inicio->addMonth();
+				$contador_sabados = 0;
+				while ($contador_sabados < $cantidad_sumar * 4) { // Multiplicamos por 4 porque hay aproximadamente 4 sábados por mes
+					if ($fecha_inicio->dayOfWeek === Carbon::SATURDAY) {
+						$fecha_correlativo[] = "Sábado: " . $fecha_inicio->toDateString() . "\n";
+						$contador_sabados++;
+					}
+					$fecha_inicio->addDay(); // Avanzar al siguiente día
+				}
 			} elseif ($periodo_pago->nombre == 'DIARIO') {
 				// Obtiene el siguiente día a partir de la fecha de inicio
 				$siguiente_dia = $fecha_inicio->copy()->addDay();
@@ -649,18 +652,13 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 	public function hook_after_add($id)
 	{
 		$contrato  = DB::table('contratos')->where('id',  $id)->first();
-		//$peridodo_pagos  = DB::table('periodo_pagos')->where('id',  $contrato->id_periodo_pago)->first();
-
-		//$id_periodo_pago  = $contrato->id_periodo_pago; // ANUAL, MENSUAL, QUINCENAL, SEMANAL, DIARIO
 		$periodo_pago     = DB::table('periodo_pagos')->where('id',   $contrato->id_periodo_pago)->first();
-		//$id_tiempo_contrato = $contrato->id_tiempo_contrato; // EN NÚMEROS segun ID
 		$tiempo_contrato  = DB::table('tiempo_contratos')
 			->where('tiempo_contratos.id',   $contrato->id_tiempo_contrato)
 			->join('periodo_pagos', 'tiempo_contratos.id_periodo_pago', 'periodo_pagos.id')
 			->select('tiempo_contratos.nombre', 'tiempo_contratos.cantidad', 'periodo_pagos.nombre as periodo_pago')
 			->first();
 		if (isset($contrato->fecha_inicio) && isset($contrato->id_periodo_pago)) {
-
 			$index 			= 1;
 			$fecha_inicio 	= Carbon::parse($contrato->fecha_inicio);
 			$cantidad_sumar = $tiempo_contrato->cantidad;
@@ -691,7 +689,7 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 					if ($tiempo_contrato->periodo_pago == 'ANUAL') {
 						$cantidad_sumar = $cantidad_sumar * 12;
 					} elseif ($tiempo_contrato->periodo_pago == 'MENSUAL') {
-						$cantidad_sumar = $cantidad_sumar;
+						$cantidad_sumar = $cantidad_sumar * 4;
 					}
 					break;
 				case 'DIARIO': //PAGO
@@ -706,7 +704,6 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 					$cantidad_sumar = $tiempo_contrato->cantidad;
 					break;
 			}
-
 			while ($index <= $cantidad_sumar) {
 				if ($periodo_pago->nombre == 'ANUAL') {
 					/*
@@ -714,7 +711,7 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 					$fecha_correlativo[] =  "Fin año $index: " . $fecha_fin_anio->toDateString() . "\n";
 					$fecha_inicio->addYear();
 					*/
-					$fecha_correlativo =  "Año " . $fecha_inicio->format('Y') . ": " . $fecha_inicio->format('Y-m-d') . "\n";
+					$fecha_correlativo[] = $fecha_inicio->format('Y-m-d');
 					$fecha_inicio->modify('+1 year'); // Suma un año
 				} elseif ($periodo_pago->nombre == 'MENSUAL') {
 					//$fecha_inicio->addMonth(); // Agrega un mes a la fecha de inicio
@@ -724,18 +721,19 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 				} elseif ($periodo_pago->nombre == 'QUINCENAL') {
 					$fecha_quincenal_15 = $fecha_inicio->copy()->day(15);
 					$fecha_quincenal_fin_mes = $fecha_inicio->copy()->endOfMonth();
-					$fecha_correlativo = "Fecha quincenal $index " . $fecha_quincenal_15->toDateString() . "\n";
-					$fecha_correlativo = "Fecha quincenal $index " . $fecha_quincenal_fin_mes->toDateString() . "\n";
+
+					$fecha_correlativo[] = $fecha_quincenal_15->toDateString();
+					$fecha_correlativo[] = $fecha_quincenal_fin_mes->toDateString();
 					$fecha_inicio->addMonth();
 				} elseif ($periodo_pago->nombre == 'SEMANAL') {
-					// Obtén el siguiente sábado a partir de la fecha de inicio
-					$sabado = $fecha_inicio->copy()->next(Carbon::SATURDAY);
-					// Obtén el siguiente domingo a partir de la fecha de inicio
-					$domingo = $fecha_inicio->copy()->next(Carbon::SUNDAY);
-
-					$fecha_correlativo = "Fin de semana $index (sábado): " . $sabado->toDateString() . "\n";
-					//$fecha_correlativo[] = "Fin de semana $index (domingo): " . $domingo->toDateString() . "\n";
-					$fecha_inicio->addMonth();
+					$contador_sabados = 0;
+					while ($contador_sabados < $cantidad_sumar) { // Multiplicamos por 4 porque hay aproximadamente 4 sábados por mes
+						if ($fecha_inicio->dayOfWeek === Carbon::SATURDAY) {
+							$fecha_correlativo[] = $fecha_inicio->toDateString();
+							$contador_sabados++;
+						}
+						$fecha_inicio->addDay(); // Avanzar al siguiente día
+					}
 				} elseif ($periodo_pago->nombre == 'DIARIO') {
 					// Obtiene el siguiente día a partir de la fecha de inicio
 					$siguiente_dia = $fecha_inicio->copy()->addDay();
@@ -750,13 +748,10 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 				}
 				$index++;
 			}
-
-
 			foreach ($fecha_correlativo as $key => $value) {
 
 				$key = $key + 1;
 				$referencia = 'PAG-' . $fecha_inicio->format('Ymd') . '-' . str_pad($key++, 4, "0", STR_PAD_LEFT);
-
 				DB::table('pagos')->insert([
 					'id_trabajador' => $contrato->id_trabajador,
 					'id_contrato'  	=> $id,
@@ -767,129 +762,25 @@ class AdminContratosController extends \crocodicstudio\crudbooster\controllers\C
 					'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
 				]);
 			}
-
-			/*
-			while ($correlativo->lte($fecha_fin)) {
-
-				//PAGOS
-				$id_pagos   = DB::table('pagos')->where('id_trabajador',  $contrato->id_trabajador)->where('id_contrato', $id)->max('id');
-
-				if ($id_pagos == null) {
-					$id_pagos = 1;
-				} else {
-					$id_pagos = $id_pagos + 1;
-				}
-
-				if ($contrato->id_periodo_pago == 1) { //ANUAL
-					if ($correlativo->year != $fecha_inicio->year) {
-						$anual[] = $correlativo->year . Carbon::parse($correlativo)->isoFormat('--- dddd DD, MMMM, Y');
-					}
-				} elseif ($contrato->id_periodo_pago == 2) { //MENSUAL
-
-					//dd($peridodo_pagos->dia_pago);
-
-					if ($peridodo_pagos->dia_pago > 0) {
-
-						$diff = $peridodo_pagos->dia_pago - $correlativo->day;
-						// Si la fecha actual es anterior al día DIA_PAGO, agregar la cantidad de días restantes
-						if ($diff > 0) {
-							$correlativo->addDays($diff);
-						}
-						// Hacer algo con la fecha DIA_PAGO de ese mes o posterior a ella
-						$fecha = $correlativo->toDateString();
-					} else {
-
-						//$fecha = $correlativo->endOfMonth()->isoFormat('Y-MM-D');
-						$ultimo_dia_del_mes = $correlativo->copy()->addMonthNoOverflow()->subDay();
-						$fecha = $ultimo_dia_del_mes->isoFormat('Y-MM-D');
-					}
-				} elseif ($contrato->id_periodo_pago == 3) { //QUINCENAL
-					if ($correlativo->format('d') == '15' || $correlativo->format('d') == $correlativo->copy()->endOfMonth()->format('d')) {
-						$quincenal[] = $correlativo->toDateString();
-					}
-					//$quincenal[] =  $fecha_inicio->toDateString() .  Carbon::parse($fecha_inicio)->isoFormat('--- dddd DD, MMMM, Y'); // Imprime la fecha en formato texto
-
-				} elseif ($contrato->id_periodo_pago == 4) { //SEMANAL
-					// Mientras la fecha sea menor o igual a la fecha final
-					if ($correlativo->dayOfWeek === Carbon::SATURDAY) { // Verifica si es domingo
-						$domingo[] = $correlativo->toDateString() . Carbon::parse($correlativo)->isoFormat('--- dddd DD, MMMM, Y'); // Imprime la fecha en formato texto
-					}
-				} elseif ($contrato->id_periodo_pago == 5) { //DIARIO
-
-				} elseif ($contrato->id_periodo_pago == 6) { //POR ENTREGABLE
-
-				} else {
-				}
-
-
-				$referencia = 'PAG-' . $fecha_inicio->copy()->endOfMonth()->format('YmdHis') . '-' . str_pad($index++, 4, "0", STR_PAD_LEFT);
-
-				DB::table('pagos')->insert([
-					'id_trabajador'   => $contrato->id_trabajador,
-					'id_contrato'  => $id,
-					'referencia' 	=> $referencia,
-					'monto' 		=> $contrato->monto,
-					'fecha' 		=> $fecha,
-					'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-				]);
-
-				if ($contrato->id_periodo_pago == 1) { //ANUAL
-					$correlativo->addYear();
-				} elseif ($contrato->id_periodo_pago == 2) { //MENSUAL
-					if ($peridodo_pagos->dia_pago > 0) {
-						// Agregar un mes completo para obtener la siguiente fecha 25
-						$correlativo->addMonth();
-						// Colocar la fecha en el primer día del mes para evitar errores
-						$correlativo->startOfMonth();
-					} else {
-						//$correlativo->addMonthNoOverflow();
-						$correlativo = $ultimo_dia_del_mes->copy()->addDay();
-					}
-				} elseif ($contrato->id_periodo_pago == 3) { //QUINCENAL
-					$correlativo->addDay();
-				} elseif ($contrato->id_periodo_pago == 4) { //SEMANAL
-
-				} elseif ($contrato->id_periodo_pago == 5) { //DIARIO
-
-				} elseif ($contrato->id_periodo_pago == 6) { //POR ENTREGABLE
-
-				} else {
-				}
-			}
-			*/
-
-			//dd($anual);
-			//dd($mensual);
-			//dd($quincenal);
-			//dd($semanal);
 		}
-
 		//ACTUALIZAR REFERENCIA
 		$trabajador   				= DB::table('trabajadors')->where('id',  $contrato->id_trabajador)->first();
 		$primera_letra_nombre   = (substr($trabajador->nombres, 0, 1));
-		$primera_letra_apellido = (substr($trabajador->apellidos, 0, 1));
+		$primera_letra_apellido = (substr($trabajador->apellidos, 0, 2));
+		if ($primera_letra_apellido === 'Ñ') {
+			$primera_letra_apellido = (substr($trabajador->apellidos, 0, 2));
+		} else {
+			$primera_letra_apellido = (substr($trabajador->apellidos, 0, 1));
+		}
 		$ceros         			= str_pad($id, 4, "0", STR_PAD_LEFT);
 		$fecha_actual 			= Carbon::now()->format('YmdHis');
 		$referencia 			= 'CTO-' . $primera_letra_nombre . $primera_letra_apellido . '-' . $fecha_actual . '-' . $ceros;
-
 		$postdata['referencia'] = $referencia;
-
 		DB::table('contratos')
 			->where('id', '=', $id)
 			->update([
 				'referencia' => $referencia,
-				//'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
 			]);
-
-		/*
-		DB::table('pagos')
-		->whereNotIn('estado', ['ATENDIDO', 'ANULADO'])
-		->where('id', '=', $id)
-		->update([
-			'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-			'estado' => 'ATENDIDO',
-			'fecha_asignacion_estado' => Carbon::now()->format('Y-m-d')
-		]);*/
 	}
 
 	/* 

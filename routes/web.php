@@ -15,3 +15,13 @@ Route::get('/', function () {
     return redirect('/admin/login');
 });
 
+
+/*
+	----------------------------------------------
+	REPORTES EN EXCEL 
+	----------------------------------------------
+*/
+
+Route::post('/admin/trabajadores/trabajadores_excel','AdminTrabajadoresController@postExcelTrabajadores');
+
+

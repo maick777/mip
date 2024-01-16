@@ -209,8 +209,8 @@ CONTENIDO
 }
 
 .light-skin-primary .dropdown-menu {
-    background: var(--light-skin-primary-bg-container)!important;
-    border-color: var(--light-skin-primary-color-info)!important;
+    background: var(--light-skin-primary-bg-container) !important;
+    border-color: var(--light-skin-primary-color-info) !important;
     color: var(--light-skin-primary-color-active);
 }
 .light-skin-primary .dropdown-menu li a {
@@ -301,6 +301,10 @@ CONTENIDO
 }
 .light-skin-primary .hero h3 {
     color: var(--light-skin-primary-color-input);
+}
+.light-skin-primary .btn-secondary,
+.light-skin-primary .btn-secondary:hover {
+    color: var(--light-skin-primary-color-active);
 }
 
 /*------------------------------------------------------------
@@ -578,4 +582,22 @@ TABLE FOOTER
 .light-skin-primary .pagination > li > span:hover {
     background-color: transparent;
     color: var(--light-skin-primary-color-active);
+}
+
+.light-skin-primary .loading {
+    background-color: var(--light-skin-primary-bg-background);
+    cursor: not-allowed;
+    color: var(--light-skin-primary-color-active);
+}
+
+.light-skin-primary .loading .loading-form {
+    background-color: var(--light-skin-primary-bg-active);
+    cursor: not-allowed;
+}
+/*------------------------------------------------------------
+SWEET ALERT
+--------------------------------------------------------------*/
+
+.light-skin-primary .sweet-alert {
+    background-color: var(--light-skin-primary-bg-container) !important;
 }

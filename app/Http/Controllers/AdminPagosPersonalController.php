@@ -20,7 +20,7 @@ class AdminPagosPersonalController extends \crocodicstudio\crudbooster\controlle
 
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
 		$this->title_field = "id";
-		$this->limit = "10";
+		$this->limit = "20";
 		$this->orderby = ['id_estado' => 'desc', 'fecha' => 'asc'];
 		$this->global_privilege = false;
 		$this->button_table_action = true;

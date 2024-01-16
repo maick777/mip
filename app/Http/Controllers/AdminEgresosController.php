@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Session;
 use Request;
-use DB;
-use CRUDBooster;
+use Illuminate\Support\Facades\DB;
+use crocodicstudio\crudbooster\helpers\CRUDBooster as CRUDBooster;
 use Illuminate\Support\Facades\App;
 
 class AdminEgresosController extends \crocodicstudio\crudbooster\controllers\CBController
@@ -38,13 +38,14 @@ class AdminEgresosController extends \crocodicstudio\crudbooster\controllers\CBC
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
-		$this->col = [];
 		if (CRUDBooster::isUpdate() && $this->button_edit) {
 			$this->col[] = ["label" => "", "name" => "id", "width" => "20", "callback" => function ($row) {
-				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
+				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_edit_data") . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
 			}];
 		}
-		$this->col[] = ["label" => "Descripción", "name" => "nombre"];
+		$this->col[] = ["label" => "Descripción", "name" => "nombre", "callback" => function ($row) {
+			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_detail_data") . '" class="table-link">' . $row->nombre . '</a>' :  $row->nombre;
+		}];
 		$this->col[] = ["label" => "Tipo", "name" => "id_tipo_egreso", "join" => "tipo_egresos,nombre"];
 		$this->col[] = ["label" => "Cant.", "name" => "cantidad"];
 		$this->col[] = ["label" => "Precio", "name" => "precio_total", "visible" => false];

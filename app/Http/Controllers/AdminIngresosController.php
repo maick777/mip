@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Session;
 use Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 use PDF;
-use CRUDBooster;
+use crocodicstudio\crudbooster\helpers\CRUDBooster as CRUDBooster;
 use Illuminate\Http\Request as HttpRequest;
 use Excel;
 
@@ -43,10 +43,13 @@ class AdminIngresosController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->col = [];
 		if (CRUDBooster::isUpdate() && $this->button_edit) {
 			$this->col[] = ["label" => "", "name" => "id", "width" => "20", "callback" => function ($row) {
-				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
+				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_edit_data") . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
 			}];
 		}
-		$this->col[] = ["label" => "Referencia", "name" => "referencias"];
+		$this->col[] = ["label" => "Referencia", "name" => "referencias", "callback" => function ($row) {
+			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_detail_data") . '" class="table-link">' . $row->referencias . '</a>' :  $row->referencias;
+		}];
+
 		$this->col[] = [
 			"label" => "Tipo", "name" => "id_tipo_ingreso", "join" => "tipo_ingresos,nombre"];
 		$this->col[] = ["label" => "Tipo", "name" => "id_tipo_ingreso", "join" => "tipo_ingresos,nombre", "visible" => false];

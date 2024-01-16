@@ -288,6 +288,10 @@ CONTENIDO
 .light-skin-rose .hero h3 {
     color: var(--light-skin-rose-color-input);
 }
+.light-skin-rose .btn-secondary,
+.light-skin-rose .btn-secondary:hover{
+    color: var(--light-skin-rose-color-active);
+}
 
 /*------------------------------------------------------------
 FORMULARIO
@@ -520,4 +524,23 @@ TABLE FOOTER
 .light-skin-rose .pagination > li > span:hover {
     background-color: transparent;
     color: var(--light-skin-rose-color-active);
+}
+
+.light-skin-rose .loading {
+    background-color: var(--light-skin-rose-bg-background);
+    cursor: not-allowed;
+    color: var(--light-skin-rose-color-active);
+}
+
+.light-skin-rose .loading .loading-form {
+    background-color: var(--light-skin-rose-bg-active);
+    cursor: not-allowed;
+}
+
+/*------------------------------------------------------------
+SWEET ALERT
+--------------------------------------------------------------*/
+
+.light-skin-rose .sweet-alert {
+    background-color: var(--light-skin-rose-bg-container) !important;
 }

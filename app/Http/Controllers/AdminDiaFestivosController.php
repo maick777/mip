@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Session;
 use Request;
 use DB;
+use Carbon\Carbon;
 use crocodicstudio\crudbooster\helpers\CRUDBooster as CRUDBooster;
 
 class AdminDiaFestivosController extends \crocodicstudio\crudbooster\controllers\CBController
@@ -19,14 +20,14 @@ class AdminDiaFestivosController extends \crocodicstudio\crudbooster\controllers
 		$this->orderby = "id,desc";
 		$this->global_privilege = false;
 		$this->button_table_action = true;
-		$this->button_bulk_action = true;
+		$this->button_bulk_action = false;
 		$this->button_action_style = "button_icon";
 		$this->button_add = true;
 		$this->button_edit = true;
 		$this->button_delete = true;
 		$this->button_detail = true;
-		$this->button_show = true;
-		$this->button_filter = true;
+		$this->button_show = false;
+		$this->button_filter = false;
 		$this->button_import = false;
 		$this->button_export = false;
 		$this->table = "dia_festivos";
@@ -34,8 +35,15 @@ class AdminDiaFestivosController extends \crocodicstudio\crudbooster\controllers
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
-		$this->col[] = ["label" => "Fecha", "name" => "fecha"];
 		$this->col[] = ["label" => "Nombre", "name" => "nombre"];
+		$this->col[] = [
+			"label" => "Fecha", "name" => "fecha",
+			"callback" => function ($row) {
+				$anio_actual = Carbon::parse(now())->format(' Y');
+				$fecha =   ($row->fecha) ?  strtoupper(Carbon::parse($row->fecha)->formatLocalized('%a %d %b')). $anio_actual : '';
+				return  strtoupper($fecha);
+			}
+		];
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
 		# START FORM DO NOT REMOVE THIS LINE

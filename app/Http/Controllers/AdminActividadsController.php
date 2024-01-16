@@ -38,11 +38,11 @@ class AdminActividadsController extends \crocodicstudio\crudbooster\controllers\
 		$this->col = [];
 		if (CRUDBooster::isUpdate() && $this->button_edit) {
 			$this->col[] = ["label" => "", "name" => "id", "width" => "20", "callback" => function ($row) {
-				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
+				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" data-toggle="tooltip" title="'. trans("crudbooster.action_edit_data") .'" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
 			}];
 		}
-		$this->col[] = ["label" => "Actividad", "name" => "titulo", "callback" => function ($row) {
-			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" class="table-link">' . $row->titulo . '</a>' :  $row->titulo;
+		$this->col[] = ["label" => "Actividad", "name" => "actividad", "callback" => function ($row) {
+			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" data-toggle="tooltip" title="'. trans("crudbooster.action_detail_data") .'" class="table-link">' . $row->actividad . '</a>' :  $row->actividad;
 		}];
 
 		$this->col[] = [
@@ -64,6 +64,8 @@ class AdminActividadsController extends \crocodicstudio\crudbooster\controllers\
 					->where('id', "!=", 4)
 					->select('estado_actividad', 'color', 'icon')
 					->first();
+
+
 				return $row->id_estado ? "<i class='fa fa-$rows->icon text-$rows->color'></i> $rows->estado_actividad" : "";
 			}
 		];
@@ -74,7 +76,7 @@ class AdminActividadsController extends \crocodicstudio\crudbooster\controllers\
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
 		$this->form[] = ['label' => 'Tipo', 'name' => 'id_tipo_actividad', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-6', 'datatable' => 'tipo_Actividads,nombre'];
-		$this->form[] = ['label' => 'Actividad', 'name' => 'titulo', 'type' => 'text', 'validation' => 'required|min:1|max:70', 'width' => 'col-sm-6'];
+		$this->form[] = ['label' => 'Actividad', 'name' => 'actividad', 'type' => 'text', 'validation' => 'required|min:1|max:70', 'width' => 'col-sm-6'];
 		$this->form[] = ['label' => 'Fecha de actividad', 'name' => 'fecha_programacion', 'type' => 'text', 'validation' => 'required|date', 'width' => 'col-sm-3'];
 
 		$this->form[] = ['label' => 'Responsable', 'name' => 'id_delegado', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-6', 'datatable' => 'cms_users,nombre_completo'];
@@ -104,8 +106,10 @@ class AdminActividadsController extends \crocodicstudio\crudbooster\controllers\
 	        | 
 	        */
 		$this->sub_module = array();
-		$this->sub_module[] = ['label' => '', 'title' => 'Asistencia', 'path' => 'asistencias', 'parent_columns' => 'titulo', 'foreign_key' => 'id_actividad', 'button_color' => 'danger', 'button_icon' => 'fa fa-pencil-square-o', 'showIf' => "[es_asistencia] == 1 and [id_estado] == 3"];
-		$this->sub_module[] = ['label' => '', 'title' => 'Participante', 'path' => 'integrantes', 'parent_columns' => 'titulo', 'foreign_key' => 'id_actividad', 'button_color' => 'warning', 'button_icon' => 'fa fa-users'];
+		$this->sub_module[] = ['label' => '', 'title' => 'Asistencia', 'path' => 'asistencias', 'parent_columns' => 'actividad', 'foreign_key' => 'id_actividad', 'button_color' => 'danger', 'button_icon' => 'fa fa-pencil-square-o', 'showIf' => "[es_asistencia] == 1 and [id_estado] == 3"];
+		$this->sub_module[] = ['label' => '', 'title' => 'Participante', 'path' => 'integrantes', 'parent_columns' => 'actividad', 'foreign_key' => 'id_actividad', 'button_color' => 'warning', 'button_icon' => 'fa fa-users'];
+
+
 
 		/* 
 	        | ---------------------------------------------------------------------- 
@@ -122,7 +126,6 @@ class AdminActividadsController extends \crocodicstudio\crudbooster\controllers\
 		$this->addaction[] = ['label' => '', 'title' => 'Iniciar', 'icon' => 'fa fa-rotate-right', 'color' => 'info', 'url' => CRUDBooster::mainpath('iniciar/[id]'), 'showIf' => "[id_estado] == 0 or [id_estado] == 4", 'confirmation' => true];
 		$this->addaction[] = ['label' => '', 'title' => 'Finalizar', 'icon' => 'fa fa-check', 'color' => 'success', 'url' => CRUDBooster::mainpath('finalizar/[id]'), 'showIf' => "[id_estado] == 3", 'confirmation' => true];
 		$this->addaction[] = ['label' => '', 'title' => 'Archivar', 'icon' => 'fa fa-trash-o', 'color' => 'danger', 'url' => CRUDBooster::mainpath('archivar/[id]'), 'showIf' => "[id_estado] == 1", 'confirmation' => true];
-
 		/* 
 	        | ---------------------------------------------------------------------- 
 	        | Add More Button Selected

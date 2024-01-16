@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Session;
 use Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 use CRUDBooster;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request as HttpRequest;
@@ -37,18 +37,14 @@ class AdminAsistenciasController extends \crocodicstudio\crudbooster\controllers
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
-		$this->col[] = ["label" => "Actividades", "name" => "id_actividad", "join" => "actividads,titulo"];
+		$this->col[] = ["label" => "Actividades", "name" => "id_actividad", "join" => "actividads,actividad"];
 		$this->col[] = ["label" => "Referencia", "name" => "referencia"];
 		$this->col[] = [
 			"label" => "Dia/Fecha Asistencia", "name" => "Fecha", "callback" => function ($row) {
-			
-
 				$amPm = Carbon::parse($row->Fecha)->format('A'); // Obtiene AM o PM
 				$fecha_programacion = ($row->Fecha) ? Carbon::parse($row->Fecha)->formatLocalized('%A %d') : '';
 				$hora_programacion = ($row->Fecha) ? Carbon::parse($row->Fecha)->formatLocalized('%I:%M %p') : '';
 				return  "<i class='fa fa-calendar-check-o text-primary'></i> " . mb_strtoupper($fecha_programacion) ." | <i class='fa fa-clock-o text-warning'></i> " . mb_strtoupper($hora_programacion) . $amPm;
-	
-
 			}
 		];
 
@@ -74,7 +70,7 @@ class AdminAsistenciasController extends \crocodicstudio\crudbooster\controllers
 			$this->form[] = ['label' => 'Referencia', 'name' => 'referencia', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-6', 'help' => 'Será: ASIST. + [Fecha seleccionada]', 'placeholder' => '- Autogenerado -', 'disabled' => false];
 		}
 
-		$this->form[] = ['label' => 'Actividades', 'name' => 'id_actividad', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-6', 'datatable' => 'actividads,titulo'];
+		$this->form[] = ['label' => 'Actividades', 'name' => 'id_actividad', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-6', 'datatable' => 'actividads,actividad'];
 
 		$this->form[] = ['label' => 'Estados', 'name' => 'id_estado', 'type' => 'select', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-4', 'datatable' => 'estados,estado_actividad,id', 'value' => 3];
 		# END FORM DO NOT REMOVE THIS LINE
