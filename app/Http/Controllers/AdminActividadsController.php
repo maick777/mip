@@ -38,11 +38,11 @@ class AdminActividadsController extends \crocodicstudio\crudbooster\controllers\
 		$this->col = [];
 		if (CRUDBooster::isUpdate() && $this->button_edit) {
 			$this->col[] = ["label" => "", "name" => "id", "width" => "20", "callback" => function ($row) {
-				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" data-toggle="tooltip" title="'. trans("crudbooster.action_edit_data") .'" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
+				return  '<a href="' . CRUDBooster::mainpath("edit/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_edit_data") . '" class="table-link"><i class="fa fa-pencil text-success"></i></a>';
 			}];
 		}
 		$this->col[] = ["label" => "Actividad", "name" => "actividad", "callback" => function ($row) {
-			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" data-toggle="tooltip" title="'. trans("crudbooster.action_detail_data") .'" class="table-link">' . $row->actividad . '</a>' :  $row->actividad;
+			return (CRUDBooster::isRead() && $this->button_detail) ? '<a href="' . CRUDBooster::mainpath("detail/" . $row->id) . '" data-toggle="tooltip" title="' . trans("crudbooster.action_detail_data") . '" class="table-link">' . $row->actividad . '</a>' :  $row->actividad;
 		}];
 
 		$this->col[] = [
